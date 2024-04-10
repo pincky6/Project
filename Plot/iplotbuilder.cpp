@@ -50,12 +50,12 @@ void PolarPlotBuilder::draw(QPainter& painter, const QString& expression, int wi
 }
 
 
-void ImplicitPlotBuilder::divideDisplay(float width, float height, float top, float left, int n, std::vector<Rect>& result)
+void ImplicitPlotBuilder::divideDisplay(float width, float height, float top, float left, int n, std::vector<Rectangle>& result)
 {
     if(n == 0) return;
     if(n == 1)
     {
-        result.push_back(Rect(width, height, top, left));
+        result.push_back(Rectangle(width, height, top, left));
         return;
     }
     double l = n / 2.0;
@@ -82,44 +82,34 @@ void ImplicitPlotBuilder::divideDisplay(float width, float height, float top, fl
 void ImplicitPlotBuilder::draw(QPainter& painter, const QString& expression, int width, int height)
 {
     std::vector<std::unique_ptr<ImplicitWorkerBuilder>> threadPool;
-    std::vector<Rect> rectangleVector;
+    std::vector<Rectangle> rectangleVector;
     int countOfRect = (std::thread::hardware_concurrency() - 1) == 0 ? 1 : (std::thread::hardware_concurrency() - 1);
     divideDisplay(width, height, 0, 0, countOfRect, rectangleVector);
-    qDebug() << rectangleVector.size();
     for(auto&& rectangle: rectangleVector)
     {
-        qDebug() << std::thread::hardware_concurrency();
-        float wStart = (rectangle.Left - width/2.0)/40.0, wEnd = (rectangle.Left + rectangle.Width - width/2.0)/40.0;
-        float hStart = (rectangle.Top - height/2.0)/40.0, hEnd = (rectangle.Top + rectangle.Height - height/2.0)/40.0;
-        qDebug() << width << height;
-//        threadPool.emplace_back(&ImplicitPlotBuilder::drawHelper, this, /*std::ref(painter),*/ std::cref(expression),
-//                                wStart, wEnd, hStart, hEnd, rectangle.Width, rectangle.Height, width, height);
-       //drawHelper(/*painter,*/ expression, wStart, wEnd, hStart, hEnd, rectangle.Width, rectangle.Height, width, height);
+        float wStart = (rectangle.Left - width/2.0)/40.0;
+        float wEnd = wEnd = (rectangle.Left + rectangle.Width - width/2.0)/40.0;
+        float hStart = (rectangle.Top - height/2.0)/40.0;
+        float hEnd = hEnd = (rectangle.Top + rectangle.Height - height/2.0)/40.0;
         ImplicitWorkerBuilder* worker = new ImplicitWorkerBuilder(expression, wStart, wEnd, hStart, hEnd,
                                                                   rectangle.Width, rectangle.Height, width, height, mut, painter);
         threadPool.emplace_back(worker);
     }
-
     for(auto&& thread: threadPool)
     {
         thread.get()->wait();
-        qDebug() << "end";
     }
 
 }
 
-void ImplicitPlotBuilder::drawHelper(/*QPainter& painter, */const QString& expression, float widthStart, float widthEnd,
-                                     float heightStart, float heightEnd, float resolutionX, float resolutionY, int width, int height)
+void ImplicitPlotBuilder::drawHelper(const QString& expression,
+                                     float widthStart, float widthEnd,
+                                     float heightStart, float heightEnd,
+                                     float resolutionX, float resolutionY)
 {
     std::vector<std::array<std::array<double, 2>, 2>> vectorOfPoints;
     ImplicitPlotPointsCoordinate  plotCoordiante;
     plotCoordiante.getPointsForPlot(vectorOfPoints, expression, widthStart, widthEnd, heightStart, heightEnd, resolutionX, resolutionY);
-    qDebug() << "end";
-//    for(auto&& point: vectorOfPoints)
-//    {
-//        painter.drawPoint((float)width/2.0 + point[0][0] *40.0, height/2.0 - (float)point[0][1] * 40.0);
-//        painter.drawPoint((float)width/2.0 + point[1][0] *40.0, height/2.0 - (float)point[1][1] * 40.0);
-//    }
 }
 
 

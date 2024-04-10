@@ -30,9 +30,9 @@ public:
 
 class ImplicitPlotBuilder: public IPlotBuilder
 {
-    struct Rect
+    struct Rectangle
     {
-        Rect(float width, float height, float top, float left): Width(width), Height(height), Top(top), Left(left){}
+        Rectangle(float width, float height, float top, float left): Width(width), Height(height), Top(top), Left(left){}
         float Width;
         float Height;
         float Top ;
@@ -40,9 +40,9 @@ class ImplicitPlotBuilder: public IPlotBuilder
     };
     QMutex mut;
 public:
-    void divideDisplay(float, float, float, float, int ,std::vector<Rect>& result);
-    void drawHelper(/*QPainter&, */const QString&, float, float, float, float, float, float, int, int);
+    void divideDisplay(float, float, float, float, int ,std::vector<Rectangle>& result);
+    void drawHelper(const QString&, float, float, float, float, float, float);
     void draw(QPainter&, const QString&, int, int) override;
 };
 
-#endif // IPLOTBUILDER_H
+#endif

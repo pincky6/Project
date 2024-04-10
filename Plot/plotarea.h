@@ -19,13 +19,16 @@ private:
 
     void paintAXCoord(QPainter& painter);
     void paintAYCoord(QPainter& painter);
+
     void paintXGrid(QPainter& painter);
     void paintYGrid(QPainter& painter);
+
     void paintYCoord(QPainter& painter);
     void paintXCoord(QPainter& painter);
+
     void paintXYCoordAndGrid(QPainter& painter);
 private:
     std::vector<QString> expressionsVector;
 };
 
-#endif // PLOTAREA_H
+#endif

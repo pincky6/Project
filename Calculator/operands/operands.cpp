@@ -300,6 +300,7 @@ Operand& Operand::operator*=(const Operand& otherOperand)
     }
     return *this;
 }
+
 Operand& Operand::operator/=(const Operand& otherOperand)
 {
     switch (otherOperand.name)

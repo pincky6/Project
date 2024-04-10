@@ -23,10 +23,6 @@ struct DomainError: std::exception
 class IOperand
 {
 public:
-    /*  virtual IOperand* operator-=(const IOperand*) = 0;
-    virtual IOperand* operator+=(const IOperand*) = 0;
-    virtual IOperand* operator*=(const IOperand*) = 0;
-    virtual IOperand* operator/=(const IOperand*) = 0;*/
     virtual IOperand& sqrt() = 0;
     virtual IOperand& abs() = 0;
 
@@ -176,34 +172,6 @@ Double operator*(const Double& rhs, const Double& lhs);
 Double operator/(const Double& rhs, const Double& lhs);
 
 
-
-//Double pow(const Double& num, const Double& power);
-//Double sqrt(const Double& num);
-//Double abs(const Double& num);
-
-//Double log(const Double& num);
-
-//Double sin(const Double& num);
-//Double cos(const Double& num);
-//Double tan(const Double& num);
-//Double cot(const Double& num);
-
-//Double asin(const Double& num);
-//Double acos(const Double& num);
-//Double atan(const Double& num);
-//Double acot(const Double& num);
-
-//Double sinh(const Double& num);
-//Double cosh(const Double& num);
-//Double tanh(const Double& num);
-//Double coth(const Double& num);
-
-//Double asinh(const Double& num);
-//Double acosh(const Double& num);
-//Double atanh(const Double& num);
-//Double acoth(const Double& num);
-
-
 template <typename T>
 class IVector: public IOperand
 {
@@ -332,32 +300,6 @@ Vector operator/(const Vector&, const Vector&);
 
 Operand scalarMultiplication(Vector&, Vector&);
 Operand vectorMultiplication(Vector&, Vector&);
-
-//Vector pow(const Vector& num, const Double& power);
-//Vector sqrt(const Vector& num);
-//Vector abs(const Vector& num);
-
-//Vector log(const Vector& num);
-
-//Vector sin(const Vector& num);
-//Vector cos(const Vector& num);
-//Vector tan(const Vector& num);
-//Vector cot(const Vector& num);
-
-//Vector asin(const Vector& num);
-//Vector acos(const Vector& num);
-//Vector atan(const Vector& num);
-//Vector acot(const Vector& num);
-
-//Vector sinh(const Vector& num);
-//Vector cosh(const Vector& num);
-//Vector tanh(const Vector& num);
-//Vector coth(const Vector& num);
-
-//Vector asinh(const Vector& num);
-//Vector acosh(const Vector& num);
-//Vector atanh(const Vector& num);
-//Vector acoth(const Vector& num);
 
 template<typename T>
 struct Wrapper
@@ -540,32 +482,6 @@ Matrix operator/(const Matrix&, const Matrix&);
 
 Operand determine(const Matrix&);
 
-//Matrix pow(const Matrix& num, const Double& power);
-//Matrix sqrt(const Matrix& num);
-//Matrix abs(const Matrix& num);
-
-//Matrix log(const Matrix& num);
-
-//Matrix sin(const Matrix& num);
-//Matrix cos(const Matrix& num);
-//Matrix tan(const Matrix& num);
-//Matrix cot(const Matrix& num);
-
-//Matrix asin(const Matrix& num);
-//Matrix acos(const Matrix& num);
-//Matrix atan(const Matrix& num);
-//Matrix acot(const Matrix& num);
-
-//Matrix sinh(const Matrix& num);
-//Matrix cosh(const Matrix& num);
-//Matrix tanh(const Matrix& num);
-//Matrix coth(const Matrix& num);
-
-//Matrix asinh(const Matrix& num);
-//Matrix acosh(const Matrix& num);
-//Matrix atanh(const Matrix& num);
-//Matrix acoth(const Matrix& num);
-
 class Operand
 {
 public:
@@ -690,34 +606,6 @@ Operand determine(const Operand&);
 Operand scalarMultiplication(Operand&, Operand&);
 Operand vectorMultiplication(Operand&, Operand&);
 
-//Operand pow(const Operand&, const Operand&);
-//Operand sqrt(const Operand&);
-//Operand abs(const Operand&);
-
-//Operand log(const Operand&);
-
-//Operand sin(const Operand&);
-//Operand cos(const Operand&);
-//Operand tan(const Operand&);
-//Operand cot(const Operand&);
-
-//Operand asin(const Operand&);
-//Operand acos(const Operand&);
-//Operand atan(const Operand&);
-//Operand acot(const Operand&);
-
-//Operand sinh(const Operand&);
-//Operand cosh(const Operand&);
-//Operand tanh(const Operand&);
-//Operand coth(const Operand&);
-
-//Operand asinh(const Operand&);
-//Operand acosh(const Operand&);
-//Operand atanh(const Operand&);
-//Operand acoth(const Operand&);
-
-//Operand atan2(const Operand& lhs, const Operand rhs);
-
 template<OperandsEnum operandsEnum, std::enable_if_t<(operandsEnum == OperandsEnum::VECTOR), bool> = true>
 Vector& operandCast(IOperand* op)
 {
@@ -736,4 +624,4 @@ Double& operandCast(IOperand* op)
 }
 
 
-#endif // OPERANDS_H
+#endif

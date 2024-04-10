@@ -1,9 +1,7 @@
 #include "Calculator/recursivedescent.h"
 #include "plotarea.h"
 #include <QPainter>
-#include <QDebug>
 #include <vector>
-#include <thread>
 
 PlotArea::PlotArea(QWidget *parent): QWidget(parent)
 {
@@ -133,6 +131,4 @@ void PlotArea::paintEvent(QPaintEvent *event)
     }
     painter.end();
     paintXYCoordAndGrid(painter);
-    qDebug() << std::thread::hardware_concurrency();
-    //qDebug() << std::thread::hardware_concurency();
 }

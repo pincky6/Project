@@ -7,19 +7,17 @@
 #include <array>
 
 namespace marching_squares {
+    class Edge
+    {
+    public:
+        Edge(const Node* origin, const Node* target);
 
-class Edge
-{
-public:
-    Edge(const Node* origin, const Node* target);
+        std::array<double, 3> GetIsoCoordinates(double iso_value) const;
 
-    std::array<double, 3> GetIsoCoordinates(double iso_value) const;
+    private:
+        const Node* origin_;
+        const Node* target_;
+    };
+}
 
-private:
-    const Node* origin_;
-    const Node* target_;
-};
-
-} // namespace marching_squares
-
-#endif // EDGE_H
+#endif

@@ -80,4 +80,4 @@ private:
     double eps;
 };
 
-#endif // RECURSIVEDESCENT_H
+#endif
