@@ -1,23 +1,23 @@
-#include "implicitworkerbuilder.h"
+#include "implicitplotworker.h"
 #include "Plot/plotpointscoordinate.h"
 
 #include <QDebug>
 
-ImplicitWorkerBuilder::ImplicitWorkerBuilder(const QString& expression, float widthStart, float widthEnd,
+ImplicitPlotWorker::ImplicitPlotWorker(const QString& expression, float widthStart, float widthEnd,
                                              float heightStart, float heightEnd, float resolutionX, float resolutionY, int width, int height,
                                              QMutex& mutex, QPainter& painter,
-                                             AbstractPlotBuilder* parent):
-    AbstractPlotBuilder(parent), expression_(expression), widthStart_(widthStart), widthEnd_(widthEnd), heightStart_(heightStart),
+                                             AbstractPlotWorker* parent):
+    AbstractPlotWorker(parent), expression_(expression), widthStart_(widthStart), widthEnd_(widthEnd), heightStart_(heightStart),
     heightEnd_(heightEnd), resolutionX_(resolutionX), resolutionY_(resolutionY), width_(width), height_(height), mutex_(mutex), painter_(painter)
 {
 
-    connect(&thread, &QThread::started, this, &ImplicitWorkerBuilder::run);
-    connect(this, &ImplicitWorkerBuilder::finished, &thread, &QThread::quit);
-    moveToThread(&thread);
-    thread.start();
+    connect(&(*thread_), &QThread::started, this, &ImplicitPlotWorker::run);
+    connect(this, &ImplicitPlotWorker::finished, &(*thread_), &QThread::quit);
+    moveToThread(&(*thread_));
+    thread_->start();
 }
 
-void ImplicitWorkerBuilder::work()
+void ImplicitPlotWorker::work()
 {
     std::vector<std::array<std::array<double, 2>, 2>> vectorOfPoints;
     ImplicitPlotPointsCoordinate  plotCoordiante;

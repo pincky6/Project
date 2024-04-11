@@ -1,22 +1,22 @@
-#ifndef IMPLICITWORKERBUILDER_H
-#define IMPLICITWORKERBUILDER_H
+#ifndef IMPLICITPLOTWORKER_H
+#define IMPLICITPLOTWORKER_H
 
-#include "abstractplotbuilder.h"
+#include "abstractplotworker.h"
 #include <QPainter>
 #include <QMutex>
 
-class ImplicitWorkerBuilder: public AbstractPlotBuilder
+class ImplicitPlotWorker: public AbstractPlotWorker
 {
 public:
-    ImplicitWorkerBuilder(const QString& expression,
+    ImplicitPlotWorker(const QString& expression,
                           float widthStart, float widthEnd,
                           float heightStart, float heightEnd,
                           float resolutionX, float resolutionY,
                           int width, int height,
                           QMutex& mutex, QPainter& painter,
-                          AbstractPlotBuilder* parent = nullptr);
+                          AbstractPlotWorker* parent = nullptr);
     void work() override;
-    ~ImplicitWorkerBuilder(){}
+    ~ImplicitPlotWorker(){}
 private:
     const QString& expression_;
 

@@ -1,6 +1,6 @@
 #include "iplotbuilder.h"
 #include "plotpointscoordinate.h"
-#include "PlotBuilderWorkers/implicitworkerbuilder.h"
+#include "PlotBuilderWorkers/implicitplotworker.h"
 
 #include <memory>
 #include <QDebug>
@@ -81,7 +81,7 @@ void ImplicitPlotBuilder::divideDisplay(float width, float height, float top, fl
 
 void ImplicitPlotBuilder::draw(QPainter& painter, const QString& expression, int width, int height)
 {
-    std::vector<std::unique_ptr<ImplicitWorkerBuilder>> threadPool;
+    std::vector<std::unique_ptr<ImplicitPlotWorker>> threadPool;
     std::vector<Rectangle> rectangleVector;
     int countOfRect = (std::thread::hardware_concurrency() - 1) == 0 ? 1 : (std::thread::hardware_concurrency() - 1);
     divideDisplay(width, height, 0, 0, countOfRect, rectangleVector);
@@ -91,7 +91,7 @@ void ImplicitPlotBuilder::draw(QPainter& painter, const QString& expression, int
         float wEnd = wEnd = (rectangle.Left + rectangle.Width - width/2.0)/40.0;
         float hStart = (rectangle.Top - height/2.0)/40.0;
         float hEnd = hEnd = (rectangle.Top + rectangle.Height - height/2.0)/40.0;
-        ImplicitWorkerBuilder* worker = new ImplicitWorkerBuilder(expression, wStart, wEnd, hStart, hEnd,
+        ImplicitPlotWorker* worker = new ImplicitPlotWorker(expression, wStart, wEnd, hStart, hEnd,
                                                                   rectangle.Width, rectangle.Height, width, height, mut, painter);
         threadPool.emplace_back(worker);
     }

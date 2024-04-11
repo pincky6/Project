@@ -13,14 +13,20 @@ SOURCES += \
     Calculator/operands/MathError.cpp \
     "Marching Squares"/edge.cpp \
     Plot/iplotbuilder.cpp \
-    PlotBuilderWorkers/abstractplotbuilder.cpp \
-    PlotBuilderWorkers/implicitworkerbuilder.cpp \
+    PlotBuilderWorkers/abstractplotworker.cpp \
+    PlotBuilderWorkers/implicitplotworker.cpp \
+    PlotBuilderWorkers/xyzplotbuilder.cpp \
+    PlotBuilderWorkers/xyzplotcalculator.cpp \
     main.cpp \
     mainwindow.cpp \
     "Marching Squares"/marchingsquares.cpp \
     "Marching Squares"/node.cpp \
+    "Marching Cubes"/marching_cubes.cpp\
+    figures.cpp\
+    axis.cpp\
     Plot/plotarea.cpp \
     Plot/plotpointscoordinate.cpp \
+    Plot/plotarea3d.cpp\
     "System Widget"/systemwidget.cpp\
     Calculator/operands/Matrix.cpp \
     Calculator/operands/Num.cpp \
@@ -31,13 +37,20 @@ SOURCES += \
 HEADERS += \
     "Marching Squares"/edge.h \
     Plot/iplotbuilder.h \
-    PlotBuilderWorkers/abstractplotbuilder.h \
-    PlotBuilderWorkers/implicitworkerbuilder.h \
+    PlotBuilderWorkers/abstractplotworker.h \
+    PlotBuilderWorkers/implicitplotworker.h \
+    PlotBuilderWorkers/xyzplotbuilder.h \
+    PlotBuilderWorkers/xyzplotcalculator.h \
     mainwindow.h \
     "Marching Squares"/marchingsquares.h \
     "Marching Squares"/node.h \
+    "Marching Cubes"/marching_cubes.h\
+    "Marching Cubes"/types.h\
+    figures.h\
+    axis.h\
     Plot/plotarea.h \
     Plot/plotpointscoordinate.h \
+    Plot/plotarea3d.h\
     "System Widget"/systemwidget.h\
     Calculator/operands.h \
     Calculator/recursivedescent.h
@@ -50,3 +63,6 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    shaders.qrc

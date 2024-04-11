@@ -155,10 +155,17 @@ void MainWindow::on_pushButton_equal_clicked()
 
 void MainWindow::on_pushButton_graph_clicked()
 {
-    ui->stackedWidget_3->setCurrentIndex(1);
     std::vector<QString> expressionsVector;
     expressionsVector.push_back(ui->textEdit->toPlainText());
-    ui->graphicArea->setExpressions(expressionsVector);
+    if(ui->stackedWidget_4->currentIndex() == 0)
+    {
+        ui->graphicArea->setExpressions(expressionsVector);
+    }
+    else
+    {
+        ui->graphicArea3D->setExpressions(expressionsVector);
+    }
+    ui->stackedWidget_3->setCurrentIndex(1);
 }
 
 
