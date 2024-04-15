@@ -9,11 +9,8 @@
 
 #include <QMutex>
 
-#include "PlotBuilderWorkers/xyzplotbuilder.h"
-
+#include "PlotBuilderWorkers/plotscheduler.h"
 #include <QMatrix4x4>
-
-#include "axis.h"
 
 class PlotArea3D final: public QOpenGLWidget, public QOpenGLFunctions
 {
@@ -35,32 +32,32 @@ protected:
     void mouseMoveEvent(QMouseEvent* event) override;
     void wheelEvent(QWheelEvent* event) override;
 private slots:
-    void receiveData();
+    void receiveData(std::vector<Vertex>*,
+                     std::vector<unsigned int>*);
 signals:
     void stopThread();
 private:
     void initShaders();
-    void initPlot(float length);
+    void initPlotBuilder(float length);
     void initAxes(float length);
 private:
-    QMatrix4x4 m_projectionMatrix;
-    QOpenGLShaderProgram m_shaderProgram;
-    QOpenGLBuffer m_arrayPlotBuffer;
-    QOpenGLBuffer m_indexPlotBuffer;
+    QMatrix4x4 projectionMatrix_;
+    QOpenGLShaderProgram shaderProgram_;
+    QOpenGLBuffer arrayPlotBuffer_;
+    QOpenGLBuffer indexPlotBuffer_;
 
-    QOpenGLBuffer m_arrayAxesBuffers[3];
-    QOpenGLBuffer m_indexAxesBuffers[3];
-    QVector2D m_mousePosition;
-    QQuaternion m_rotation;
+    QOpenGLBuffer arrayAxesBuffers_[3];
+    QOpenGLBuffer indexAxesBuffers_[3];
+    QVector2D mousePosition_;
+    QQuaternion rotation_;
 
-    QMutex mutex_;
-    std::unique_ptr<plot_builder::XYZPlotBuilder> builder;
+    plot_builder::PlotScheduler scheduler_;
 
-    float defaultLength;
-    float scaleFactor;
-    float maxScaleFactor;
-    float m_z;
+    float defaultLength_;
+    float scaleFactor_;
+    float maxScaleFactor_;
+    float mZ_;
 
-    std::vector<QString> expressionsVector;
+    std::vector<QString> expressionsVector_;
 };
 #endif // PLOTAREA3D_H

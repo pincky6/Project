@@ -157,12 +157,15 @@ void MainWindow::on_pushButton_graph_clicked()
 {
     std::vector<QString> expressionsVector;
     expressionsVector.push_back(ui->textEdit->toPlainText());
-    if(ui->stackedWidget_4->currentIndex() == 0)
+
+    if(ui->action2D->isChecked())
     {
+        ui->stackedWidget_4->setCurrentIndex(0);
         ui->graphicArea->setExpressions(expressionsVector);
     }
     else
     {
+        ui->stackedWidget_4->setCurrentIndex(1);
         ui->graphicArea3D->setExpressions(expressionsVector);
     }
     ui->stackedWidget_3->setCurrentIndex(1);
@@ -180,3 +183,28 @@ void MainWindow::on_pushButton_10_clicked()
     ui->stackedWidget_3->setCurrentIndex(0);
 }
 
+void MainWindow::on_2DModeChanged()
+{
+    std::vector<QString> expressionsVector;
+    expressionsVector.push_back(ui->textEdit->toPlainText());
+    if(ui->action2D->isChecked())
+    {
+        ui->action3D->setChecked(false);
+
+        ui->graphicArea->setExpressions(expressionsVector);
+        ui->stackedWidget_4->setCurrentIndex(0);
+    }
+}
+
+void MainWindow::on_3DModeChanged()
+{
+    std::vector<QString> expressionsVector;
+    expressionsVector.push_back(ui->textEdit->toPlainText());
+    if(ui->action3D->isChecked())
+    {
+        ui->action2D->setChecked(false);
+
+        ui->graphicArea3D->setExpressions(expressionsVector);
+        ui->stackedWidget_4->setCurrentIndex(1);
+    }
+}

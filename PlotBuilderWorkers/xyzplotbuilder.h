@@ -24,28 +24,23 @@ namespace plot_builder{
         void start();
         void work() override;
         void wait() override;
-        void clearBuffers();
 
         void setCubes(std::vector<Cube>&);
         void setThreadsNum(unsigned int);
         void setResolution(const Resolution&);
         void setExpression(const std::vector<QString>&);
 
-        std::vector<Vertex>& getVertices();
-        std::vector<unsigned int>& getIndices();
-
         ~XYZPlotBuilder();
     public slots:
         void workFinished();
     signals:
-        void buildingPlotFinish();
+        void buildingPlotFinish(XYZPlotBuilder*, std::vector<Vertex>*, std::vector<unsigned int>*);
     private:
         std::vector<Cube> cubes_;
-        std::vector<Vertex> vertices_;
-        std::vector<unsigned int> indices_;
         Resolution resolution_;
         std::vector<std::unique_ptr<plot_builder::XYZPlotCalculator>> plotCalculators_;
-
+        std::vector<Vertex>* vertices_;
+        std::vector<unsigned int>* indices_;
         std::vector<QString> expressionsVector_;
 
 

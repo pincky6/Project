@@ -40,7 +40,7 @@ void AbstractPlotWorker::whileRun()
     while(flag_)
     {
         work();
-        thread_->sleep(5);
+        thread_->sleep(1);
     }
     emit finished();
 }

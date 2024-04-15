@@ -103,6 +103,9 @@ MarchingCubes::MarchingCubes(const QString& expression, RecursiveDecsent& recurs
 
         std::vector<Vertex> points;
         std::vector<unsigned int> indices;
+
+        points.reserve(100000);
+        indices.reserve(100000);
         float dx = float(xRange[1] - xRange[0]) / (float)resolution[0];
         float dy = float(yRange[1] - yRange[0]) / (float)resolution[1];
         float dz = float(zRange[1] - zRange[0]) / (float)resolution[2];

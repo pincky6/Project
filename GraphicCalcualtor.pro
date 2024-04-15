@@ -15,6 +15,7 @@ SOURCES += \
     Plot/iplotbuilder.cpp \
     PlotBuilderWorkers/abstractplotworker.cpp \
     PlotBuilderWorkers/implicitplotworker.cpp \
+    PlotBuilderWorkers/plotscheduler.cpp \
     PlotBuilderWorkers/xyzplotbuilder.cpp \
     PlotBuilderWorkers/xyzplotcalculator.cpp \
     main.cpp \
@@ -39,6 +40,7 @@ HEADERS += \
     Plot/iplotbuilder.h \
     PlotBuilderWorkers/abstractplotworker.h \
     PlotBuilderWorkers/implicitplotworker.h \
+    PlotBuilderWorkers/plotscheduler.h \
     PlotBuilderWorkers/xyzplotbuilder.h \
     PlotBuilderWorkers/xyzplotcalculator.h \
     mainwindow.h \

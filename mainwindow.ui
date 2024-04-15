@@ -18,7 +18,7 @@
     <item>
      <widget class="QStackedWidget" name="stackedWidget_3">
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="page_3">
        <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -1069,6 +1069,8 @@
     <property name="title">
      <string>Modes</string>
     </property>
+    <addaction name="action2D"/>
+    <addaction name="action3D"/>
    </widget>
    <addaction name="menu3d_mode"/>
   </widget>
@@ -1076,6 +1078,25 @@
   <action name="action3d_mode">
    <property name="text">
     <string>3d mode</string>
+   </property>
+  </action>
+  <action name="action2D">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>2D режим</string>
+   </property>
+  </action>
+  <action name="action3D">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>3D mode</string>
    </property>
   </action>
  </widget>
@@ -1564,9 +1585,43 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>action2D</sender>
+   <signal>changed()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>on_2DModeChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>222</x>
+     <y>287</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>action3D</sender>
+   <signal>changed()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>on_3DModeChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>222</x>
+     <y>287</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>buttonClicked()</slot>
   <slot>functionButtonClicked()</slot>
+  <slot>on_2DModeChanged()</slot>
+  <slot>on_3DModeChanged()</slot>
  </slots>
 </ui>

@@ -10,14 +10,12 @@ XYZPlotBuilder::XYZPlotBuilder(std::vector<Cube>& cubes,
                                unsigned int threadsCount)
     : cubes_(cubes), threadsCount_(threadsCount)
 {
-    connect(&(*thread_), &QThread::started, this, &XYZPlotBuilder::run);
-    connect(this, &XYZPlotBuilder::finished, this, &XYZPlotBuilder::workFinished);
-    moveToThread(&(*thread_));
-    thread_->start();
 }
 
 void XYZPlotBuilder::start()
 {
+    vertices_ = new std::vector<Vertex>();
+    indices_  = new std::vector<unsigned int>();
     connect(&(*thread_), &QThread::started, this, &XYZPlotBuilder::run);
     connect(this, &XYZPlotBuilder::finished, this, &XYZPlotBuilder::workFinished);
     moveToThread(&(*thread_));
@@ -53,11 +51,11 @@ void XYZPlotBuilder::work()
         plotCalculators_[i]->wait();
         std::vector<Vertex> plotVertices = std::move(plotCalculators_[i]->getVertices());
         std::vector<unsigned int> plotIndices = std::move(plotCalculators_[i]->getIndices());
-        std::copy(plotVertices.begin(), plotVertices.end(), std::back_inserter(vertices_));
-        std::size_t currentSize = indices_.size();
+        std::copy(plotVertices.begin(), plotVertices.end(), std::back_inserter(*vertices_));
+        std::size_t currentSize = (*indices_).size();
         for(auto index: plotIndices)
         {
-            indices_.push_back(index + currentSize);
+            (*indices_).push_back(index + currentSize);
         }
     }
 }
@@ -66,22 +64,16 @@ void XYZPlotBuilder::wait()
 {
     for(auto&& plotCalculator: plotCalculators_)
     {
-        plotCalculator->quit();
         plotCalculator->wait();
     }
-    thread_->quit();
     thread_->wait();
-    if(vertices_.size() != 0)
+    if(vertices_ == nullptr) return;
+    if((*vertices_).size() != 0)
     {
-        emit buildingPlotFinish();
+        emit buildingPlotFinish(this, vertices_, indices_);
     }
 }
 
-void XYZPlotBuilder::clearBuffers()
-{
-    vertices_.clear();
-    indices_.clear();
-}
 
 void XYZPlotBuilder::setCubes(std::vector<Cube>& newCubes)
 {
@@ -103,16 +95,6 @@ void XYZPlotBuilder::setExpression(const std::vector<QString>& newExpression)
     expressionsVector_ = newExpression;
 }
 
-std::vector<Vertex> &XYZPlotBuilder::getVertices()
-{
-    return vertices_;
-}
-
-std::vector<unsigned int> &XYZPlotBuilder::getIndices()
-{
-    return indices_;
-}
-
 XYZPlotBuilder::~XYZPlotBuilder()
 {
     for(auto&& plotCalculator: plotCalculators_)
@@ -125,8 +107,8 @@ XYZPlotBuilder::~XYZPlotBuilder()
 void XYZPlotBuilder::workFinished()
 {
     thread_->quit();
-    if(vertices_.size() > 0)
+    if((*vertices_).size() > 0)
     {
-        emit buildingPlotFinish();
+        emit buildingPlotFinish(this, vertices_, indices_);
     }
 }

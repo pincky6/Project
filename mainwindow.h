@@ -40,6 +40,9 @@ private slots:
 
     void on_pushButton_10_clicked();
 
+    void on_2DModeChanged();
+    void on_3DModeChanged();
+
 private:
     void createMenuForButton(QPushButton*, const std::initializer_list<QString>&, void(MainWindow::*)());
 private:
