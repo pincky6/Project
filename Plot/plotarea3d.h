@@ -19,6 +19,8 @@ class PlotArea3D final: public QOpenGLWidget, public QOpenGLFunctions
 public:
     PlotArea3D(QWidget *parent = 0);
     void setExpressions(const std::vector<QString>&);
+    void resetPlot(std::shared_ptr<std::vector<Vertex>>,
+                   std::shared_ptr<std::vector<unsigned int>>);
     ~PlotArea3D();
 protected:
     void initializeGL() override;
@@ -32,8 +34,8 @@ protected:
     void mouseMoveEvent(QMouseEvent* event) override;
     void wheelEvent(QWheelEvent* event) override;
 private slots:
-    void receiveData(std::vector<Vertex>*,
-                     std::vector<unsigned int>*);
+    void receiveData(std::shared_ptr<std::vector<Vertex>>,
+                     std::shared_ptr<std::vector<unsigned int>>);
 signals:
     void stopThread();
 private:

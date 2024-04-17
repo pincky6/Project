@@ -21,11 +21,11 @@ namespace plot_builder
         void start();
     public slots:
         void receiveData(XYZPlotBuilder* readyBuilder,
-                         std::vector<Vertex>* verticies,
-                         std::vector<unsigned int>* indices);
+                         std::shared_ptr<std::vector<Vertex>> verticies,
+                         std::shared_ptr<std::vector<unsigned int>> indices);
     signals:
-        void updatePlot(std::vector<Vertex>* verticies,
-                        std::vector<unsigned int>* indices);
+        void updatePlot(std::shared_ptr<std::vector<Vertex>> verticies,
+                        std::shared_ptr<std::vector<unsigned int>> indices);
     private:
         std::list<std::unique_ptr<XYZPlotBuilder>> tasks;
     };

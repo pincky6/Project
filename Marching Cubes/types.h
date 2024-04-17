@@ -28,6 +28,22 @@ struct Vertex
 
     Vertex& operator=(const Vertex&) = default;
     Vertex& operator=(Vertex&&) = default;
+
+    friend QDataStream& operator<<(QDataStream& out, const Vertex& vertex)
+    {
+        out << vertex.position;
+        out << vertex.normal;
+        out << vertex.color;
+        return out;
+    }
+    friend QDataStream& operator>>(QDataStream& in, Vertex& vertex)
+    {
+        in >> vertex.position;
+        in >> vertex.normal;
+        in >> vertex.color;
+
+        return in;
+    }
 };
 
 

@@ -4,6 +4,7 @@
 #include <QVector3D>
 
 #include "axis.h"
+#include "Database/plottable3d.h"
 
 #include "figures.h"
 
@@ -15,16 +16,75 @@ PlotArea3D::PlotArea3D(QWidget *parent)
     indexAxesBuffers_{QOpenGLBuffer(QOpenGLBuffer::IndexBuffer),
                        QOpenGLBuffer(QOpenGLBuffer::IndexBuffer),
                        QOpenGLBuffer(QOpenGLBuffer::IndexBuffer)},
-    defaultLength_(20.0f), scaleFactor_(1.0f), mZ_(-5.0f)
+    defaultLength_(20.0f), scaleFactor_(1.0f), maxScaleFactor_(1.0f), mZ_(-5.0f)
 {
-    mZ_ = -5.0f;
     connect(&scheduler_, &PlotScheduler::updatePlot, this, &PlotArea3D::receiveData);
 }
 
 void PlotArea3D::setExpressions(const std::vector<QString>& newExpressionsVector)
 {
     expressionsVector_ = newExpressionsVector;
-    initPlotBuilder(defaultLength_ * scaleFactor_);
+    PlotTable3D table;
+    for(auto&& expression: expressionsVector_)
+    {
+        if(expression.isEmpty()) continue;
+        if(!table.existExpression(expression))
+        {
+            initPlotBuilder(defaultLength_ * scaleFactor_);
+        }
+        else
+        {
+            Plot3D plot3D = table.selectByExpression(expression);
+            maxScaleFactor_ = plot3D.maxScaleFactor;
+            scaleFactor_ = plot3D.maxScaleFactor;
+            resetPlot(plot3D.vertices, plot3D.indices);
+            qDebug() << "END SET EXPRE";
+        }
+    }
+}
+
+void PlotArea3D::resetPlot(std::shared_ptr<std::vector<Vertex>> plotVertices,
+                           std::shared_ptr<std::vector<unsigned int>> plotIndices)
+{
+    if(plotVertices.get() == nullptr ||
+        plotIndices.get() == nullptr)
+    {
+        return;
+    }
+    if(plotVertices->size() == 0 ||
+        plotIndices->size() == 0) return;
+    if(arrayPlotBuffer_.isCreated())
+    {
+        arrayPlotBuffer_.destroy();
+        indexPlotBuffer_.destroy();
+    }
+    Plot3D plot3D(expressionsVector_[0], plotVertices,
+                  plotIndices, maxScaleFactor_);
+    PlotTable3D table;
+    if(table.existExpression(plot3D.expression))
+    {
+        table.update(plot3D);
+    }
+    else
+    {
+        table.insert(plot3D);
+    }
+
+    arrayPlotBuffer_.create();
+    arrayPlotBuffer_.bind();
+    arrayPlotBuffer_.allocate(plot3D.vertices->data(),
+                              plot3D.vertices->size() * sizeof(Vertex));
+    arrayPlotBuffer_.release();
+
+    indexPlotBuffer_.create();
+    indexPlotBuffer_.bind();
+    indexPlotBuffer_.allocate(plot3D.indices->data(),
+                              plot3D.indices->size() * sizeof(unsigned int));
+    indexPlotBuffer_.release();
+
+    initAxes(defaultLength_ * scaleFactor_);
+
+    update();
 }
 
 PlotArea3D::~PlotArea3D()
@@ -195,43 +255,11 @@ void PlotArea3D::wheelEvent(QWheelEvent *event)
     update();
 }
 
-void PlotArea3D::receiveData(std::vector<Vertex>* plotVertices,
-                             std::vector<unsigned int>* plotIndices)
+void PlotArea3D::receiveData(std::shared_ptr<std::vector<Vertex>> plotVertices,
+                             std::shared_ptr<std::vector<unsigned int>> plotIndices)
 {
     qDebug() << "receive plot";
-    if(plotVertices == nullptr ||
-        plotIndices == nullptr)
-    {
-        return;
-    }
-    if(plotVertices->size() == 0 ||
-        plotIndices->size() == 0) return;
-    if(arrayPlotBuffer_.isCreated())
-    {
-        arrayPlotBuffer_.destroy();
-        indexPlotBuffer_.destroy();
-    }
-    std::vector<Vertex> vertices = std::move(*plotVertices);
-    std::vector<unsigned int> indices = std::move(*plotIndices);
-
-    arrayPlotBuffer_.create();
-    arrayPlotBuffer_.bind();
-    arrayPlotBuffer_.allocate(vertices.data(), vertices.size() * sizeof(Vertex));
-    arrayPlotBuffer_.release();
-
-    indexPlotBuffer_.create();
-    indexPlotBuffer_.bind();
-    indexPlotBuffer_.allocate(indices.data(), indices.size() * sizeof(unsigned int));
-    indexPlotBuffer_.release();
-
-    initAxes(defaultLength_ * scaleFactor_);
-
-    if(plotVertices != nullptr)
-        delete plotVertices;
-    if(plotIndices != nullptr)
-        delete plotIndices;
-
-    update();
+    resetPlot(plotVertices, plotIndices);
 }
 
 

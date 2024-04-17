@@ -20,7 +20,7 @@ namespace plot_builder{
     public:
         XYZPlotBuilder();
         XYZPlotBuilder(std::vector<Cube>&, const Resolution&, unsigned int);
-
+        void connect();
         void start();
         void work() override;
         void wait() override;
@@ -34,13 +34,14 @@ namespace plot_builder{
     public slots:
         void workFinished();
     signals:
-        void buildingPlotFinish(XYZPlotBuilder*, std::vector<Vertex>*, std::vector<unsigned int>*);
+        void buildingPlotFinish(XYZPlotBuilder*,
+                                std::shared_ptr<std::vector<Vertex>>, std::shared_ptr<std::vector<unsigned int>>);
     private:
         std::vector<Cube> cubes_;
         Resolution resolution_;
         std::vector<std::unique_ptr<plot_builder::XYZPlotCalculator>> plotCalculators_;
-        std::vector<Vertex>* vertices_;
-        std::vector<unsigned int>* indices_;
+        std::shared_ptr<std::vector<Vertex>> vertices_;
+        std::shared_ptr<std::vector<unsigned int>> indices_;
         std::vector<QString> expressionsVector_;
 
 

@@ -27,15 +27,16 @@ void PlotScheduler::work()
         return;
     }
     qDebug() << "do task";
+    tasks.front()->start();
     tasks.front()->wait();
     qDebug() << "end task";
 }
 
 void PlotScheduler::addTask(std::unique_ptr<XYZPlotBuilder>&& newBuilder)
 {
-    connect(newBuilder.get(), &XYZPlotBuilder::buildingPlotFinish,
+    QObject::connect(newBuilder.get(), &XYZPlotBuilder::buildingPlotFinish,
             this, &PlotScheduler::receiveData);
-    newBuilder->start();
+    newBuilder->connect();
     tasks.push_back(std::move(newBuilder));
 }
 
@@ -46,10 +47,10 @@ void PlotScheduler::wait()
 }
 
 void PlotScheduler::receiveData(XYZPlotBuilder* readyBuilder,
-                                std::vector<Vertex> *verticies,
-                                std::vector<unsigned int> *indicies)
+                                std::shared_ptr<std::vector<Vertex>> verticies,
+                                std::shared_ptr<std::vector<unsigned int>> indicies)
 {
-    if(verticies == nullptr || indicies == nullptr)
+    if(verticies.get() == nullptr || indicies.get() == nullptr)
     {
         return;
     }

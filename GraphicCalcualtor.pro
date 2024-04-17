@@ -1,4 +1,4 @@
-QT       += core gui widgets opengl openglwidgets
+QT       += core gui widgets opengl openglwidgets sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -12,6 +12,8 @@ CONFIG += c++14
 SOURCES += \
     Calculator/operands/MathError.cpp \
     "Marching Squares"/edge.cpp \
+    Database/plottable2d.cpp \
+    Database/plottable3d.cpp \
     Plot/iplotbuilder.cpp \
     PlotBuilderWorkers/abstractplotworker.cpp \
     PlotBuilderWorkers/implicitplotworker.cpp \
@@ -37,6 +39,10 @@ SOURCES += \
 
 HEADERS += \
     "Marching Squares"/edge.h \
+    Database/abstractplottable.h \
+    Database/plottable2d.h \
+    Database/plottable3d.h \
+    Database/serializablecontainers.h \
     Plot/iplotbuilder.h \
     PlotBuilderWorkers/abstractplotworker.h \
     PlotBuilderWorkers/implicitplotworker.h \
@@ -56,7 +62,6 @@ HEADERS += \
     "System Widget"/systemwidget.h\
     Calculator/operands.h \
     Calculator/recursivedescent.h
-
 FORMS += \
     mainwindow.ui \
     systemwidget.ui

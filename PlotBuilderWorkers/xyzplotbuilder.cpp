@@ -1,4 +1,5 @@
 #include "xyzplotbuilder.h"
+#include <QObject>
 
 using namespace plot_builder;
 
@@ -12,13 +13,18 @@ XYZPlotBuilder::XYZPlotBuilder(std::vector<Cube>& cubes,
 {
 }
 
+void XYZPlotBuilder::connect()
+{
+    vertices_.reset(new std::vector<Vertex>());
+    indices_.reset(new std::vector<unsigned int>());
+    QThread* threadPtr = thread_.get();
+    QObject::connect(threadPtr, &QThread::started, this, &XYZPlotBuilder::run);
+    QObject::connect(this, &XYZPlotBuilder::finished, this, &XYZPlotBuilder::workFinished);
+    moveToThread(thread_.get());
+}
+
 void XYZPlotBuilder::start()
 {
-    vertices_ = new std::vector<Vertex>();
-    indices_  = new std::vector<unsigned int>();
-    connect(&(*thread_), &QThread::started, this, &XYZPlotBuilder::run);
-    connect(this, &XYZPlotBuilder::finished, this, &XYZPlotBuilder::workFinished);
-    moveToThread(&(*thread_));
     thread_->start();
 }
 
