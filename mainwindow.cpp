@@ -65,12 +65,12 @@ void MainWindow::on_swapLayoutButton_clicked()
     ui->stackedWidget->setCurrentIndex(!currentIndex);
     switch (currentIndex)
     {
-    case 0:
+    case (int)KeyBoardArea::ARITHMETIC_AREA:
     {
         ui->swapLayoutButton->setText("123...");
         break;
     }
-    case 1:
+    case (int)KeyBoardArea::FUNCTION_AREA:
     {
         ui->swapLayoutButton->setText("func");
         break;

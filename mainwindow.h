@@ -16,8 +16,13 @@ class MainWindow : public QMainWindow
 
     enum class CalculatorArea
     {
-        CALCULATOR_AREA,
+        CALCULATOR_AREA = 0,
         PLOT_AREA
+    };
+    enum class KeyBoardArea
+    {
+        ARITHMETIC_AREA = 0,
+        FUNCTION_AREA
     };
 
     enum class PlotAreas
