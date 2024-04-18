@@ -1038,7 +1038,7 @@
                <widget class="PlotArea3D" name="graphicArea3D"/>
               </item>
               <item>
-               <widget class="QPushButton" name="pushButton_10">
+               <widget class="QPushButton" name="backButton">
                 <property name="text">
                  <string>Return</string>
                 </property>
@@ -1570,10 +1570,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>pushButton_10</sender>
+   <sender>backButton</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
-   <slot>buttonClicked()</slot>
+   <slot>on_backButton_clicked()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>222</x>
@@ -1623,5 +1623,6 @@
   <slot>functionButtonClicked()</slot>
   <slot>on_2DModeChanged()</slot>
   <slot>on_3DModeChanged()</slot>
+  <slot>on_backButton_clicked()</slot>
  </slots>
 </ui>

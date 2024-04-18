@@ -14,6 +14,18 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
+    enum class CalculatorArea
+    {
+        CALCULATOR_AREA,
+        PLOT_AREA
+    };
+
+    enum class PlotAreas
+    {
+        PLOT_AREA_2D = 0,
+        PLOT_AREA_3D
+    };
+
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
@@ -38,7 +50,7 @@ private slots:
 
     void on_pushButton_clicked();
 
-    void on_pushButton_10_clicked();
+    void on_backButton_clicked();
 
     void on_2DModeChanged();
     void on_3DModeChanged();

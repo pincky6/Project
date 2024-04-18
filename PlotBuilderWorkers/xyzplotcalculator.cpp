@@ -43,36 +43,6 @@ namespace plot_builder
         vertices_ = std::move(std::get<0>(plot));
         indices_ = std::move(std::get<1>(plot));
         if(vertices_.size() == 0) return;
-        auto minmax = std::minmax_element(vertices_.cbegin(), vertices_.cend(),
-                                          [](auto&& lhs, auto&& rhs){
-                                              return lhs.position.z() < rhs.position.z();
-                                          });
-
-        double min = minmax.first->position.z();
-        double max = minmax.second->position.z();
-
-        double yellow_bound_min = min/2.0f + (max + min) / 2.0f;
-        double yellow_bound_max = max/ 2.0f + (max + min) / 2.0f;
-
-        double red_bound_min = min / 4.0f + yellow_bound_min;
-        double red_bound_max = max / 4.0f + yellow_bound_max;
-
-        std::for_each(vertices_.begin(), vertices_.end(), [&](Vertex& p){
-            if((p.position.z() <= yellow_bound_min && p.position.z() >= red_bound_min)||
-                (p.position.z() >= yellow_bound_max && p.position.z() <= red_bound_max))
-            {
-                p.color = QVector3D(1.0f, 1.0f, 0.0f);
-            }
-            else if(p.position.z() <= red_bound_min || p.position.z() >= red_bound_max)
-            {
-                p.color = QVector3D(1.0f, 0.0f, 0.0f);
-            }
-            else
-            {
-                p.color = QVector3D(0.0, 1.0f, 0.0f);
-            }
-        });
-
     }
 
     std::vector<Vertex> &XYZPlotCalculator::getVertices()

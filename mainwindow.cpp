@@ -160,27 +160,31 @@ void MainWindow::on_pushButton_graph_clicked()
 
     if(ui->action2D->isChecked())
     {
-        ui->stackedWidget_4->setCurrentIndex(0);
+        ui->stackedWidget_4->setCurrentIndex((int)PlotAreas::PLOT_AREA_2D);
         ui->graphicArea->setExpressions(expressionsVector);
     }
     else
     {
-        ui->stackedWidget_4->setCurrentIndex(1);
+        ui->stackedWidget_4->setCurrentIndex((int)PlotAreas::PLOT_AREA_3D);
         ui->graphicArea3D->setExpressions(expressionsVector);
     }
-    ui->stackedWidget_3->setCurrentIndex(1);
+    ui->stackedWidget_3->setCurrentIndex((int)CalculatorArea::PLOT_AREA);
 }
 
 
 void MainWindow::on_pushButton_clicked()
 {
-    ui->stackedWidget_3->setCurrentIndex(0);
+    ui->stackedWidget_3->setCurrentIndex((int)CalculatorArea::CALCULATOR_AREA);
 }
 
 
-void MainWindow::on_pushButton_10_clicked()
+void MainWindow::on_backButton_clicked()
 {
-    ui->stackedWidget_3->setCurrentIndex(0);
+    ui->stackedWidget_3->setCurrentIndex((int)CalculatorArea::CALCULATOR_AREA);
+    if(ui->stackedWidget_4->currentIndex() == (int)PlotAreas::PLOT_AREA_3D)
+    {
+        ui->graphicArea3D->destroyPlotBuffer();
+    }
 }
 
 void MainWindow::on_2DModeChanged()
@@ -191,8 +195,11 @@ void MainWindow::on_2DModeChanged()
     {
         ui->action3D->setChecked(false);
 
-        ui->graphicArea->setExpressions(expressionsVector);
-        ui->stackedWidget_4->setCurrentIndex(0);
+        if(ui->stackedWidget_3->currentIndex() != (int)CalculatorArea::CALCULATOR_AREA)
+        {
+            ui->graphicArea->setExpressions(expressionsVector);
+            ui->stackedWidget_4->setCurrentIndex((int)PlotAreas::PLOT_AREA_2D);
+        }
     }
 }
 
@@ -203,8 +210,10 @@ void MainWindow::on_3DModeChanged()
     if(ui->action3D->isChecked())
     {
         ui->action2D->setChecked(false);
-
-        ui->graphicArea3D->setExpressions(expressionsVector);
-        ui->stackedWidget_4->setCurrentIndex(1);
+        if(ui->stackedWidget_3->currentIndex() != (int)CalculatorArea::CALCULATOR_AREA)
+        {
+            ui->graphicArea3D->setExpressions(expressionsVector);
+            ui->stackedWidget_4->setCurrentIndex((int)PlotAreas::PLOT_AREA_3D);
+        }
     }
 }

@@ -21,6 +21,7 @@ public:
     void setExpressions(const std::vector<QString>&);
     void resetPlot(std::shared_ptr<std::vector<Vertex>>,
                    std::shared_ptr<std::vector<unsigned int>>);
+    void destroyPlotBuffer();
     ~PlotArea3D();
 protected:
     void initializeGL() override;
@@ -29,6 +30,7 @@ protected:
 
     void paintAxes();
     void paintPlot();
+
 
     void mousePressEvent(QMouseEvent* event) override;
     void mouseMoveEvent(QMouseEvent* event) override;

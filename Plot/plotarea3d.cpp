@@ -23,6 +23,7 @@ PlotArea3D::PlotArea3D(QWidget *parent)
 
 void PlotArea3D::setExpressions(const std::vector<QString>& newExpressionsVector)
 {
+
     expressionsVector_ = newExpressionsVector;
     PlotTable3D table;
     for(auto&& expression: expressionsVector_)
@@ -53,11 +54,7 @@ void PlotArea3D::resetPlot(std::shared_ptr<std::vector<Vertex>> plotVertices,
     }
     if(plotVertices->size() == 0 ||
         plotIndices->size() == 0) return;
-    if(arrayPlotBuffer_.isCreated())
-    {
-        arrayPlotBuffer_.destroy();
-        indexPlotBuffer_.destroy();
-    }
+    destroyPlotBuffer();
     Plot3D plot3D(expressionsVector_[0], plotVertices,
                   plotIndices, maxScaleFactor_);
     PlotTable3D table;
@@ -101,6 +98,7 @@ void PlotArea3D::initializeGL()
     glDisable(GL_CULL_FACE);
 
     initShaders();
+    initAxes(defaultLength_);
 }
 
 void PlotArea3D::resizeGL(int w, int h)
@@ -204,6 +202,15 @@ void PlotArea3D::paintPlot()
 
     arrayPlotBuffer_.release();
     indexPlotBuffer_.release();
+}
+
+void PlotArea3D::destroyPlotBuffer()
+{
+    if(arrayPlotBuffer_.isCreated())
+    {
+        arrayPlotBuffer_.destroy();
+        indexPlotBuffer_.destroy();
+    }
 }
 
 void PlotArea3D::mousePressEvent(QMouseEvent *event)
