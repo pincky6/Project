@@ -1,28 +1,72 @@
 #include "plottable2d.h"
 
 #include <QSqlQuery>
+#include <QSqlError>
 
 Plot2D::Plot2D(const QString& expression_,
                const QByteArray& serializedVertices):
-    expression(expression_), vertices(new std::vector<EdgeList>)
+    expression(expression_), vertices(new marching_squares::EdgeList)
 {
     deserializeEdgeList(serializedVertices);
 }
 
-Plot2D::Plot2D(const QString& expression,
-               std::vector<EdgeList>* vertices)
+Plot2D::Plot2D(const QString& expression_,
+               marching_squares::EdgeList* vertices_):
+    expression(expression_), vertices(vertices_)
 {
 
 }
 
-void Plot2D::serializeEdgeList(const std::vector<EdgeList>& vertices)
+QByteArray Plot2D::serializeEdgeList()
 {
+    QByteArray buffer;
+    QDataStream stream(&buffer, QDataStream::WriteOnly);
+    return buffer;
+    for(auto&& edges: *vertices)
+    {
+        for(auto&& edge: edges)
+        {
+            for(auto&& point: edge)
+            {
+                stream << point;
+            }
+        }
+    }
+    return buffer;
+}
 
+QByteArray Plot2D::serializeEdgeList() const
+{
+    QByteArray buffer;
+    QDataStream stream(&buffer, QDataStream::WriteOnly);
+    for(auto&& edges: *vertices)
+    {
+        for(auto&& edge: edges)
+        {
+            for(auto&& point: edge)
+            {
+                stream << point;
+            }
+        }
+    }
+    return buffer;
 }
 
 void Plot2D::deserializeEdgeList(const QByteArray& serializedVertices)
 {
-   // deserializeContainer(*vertices, serializedVertices);
+    QByteArray buffer = serializedVertices;
+    QDataStream stream(&buffer, QDataStream::ReadOnly);
+    while(!stream.atEnd())
+    {
+        std::array<std::array<double, 2>, 2> edges;
+        stream >> edges[0][0];
+        stream >> edges[0][1];
+
+        stream >> edges[1][0];
+        stream >> edges[1][1];
+        vertices->push_back(std::move(edges));
+    }
+   //deserializeContainer(*vertices, serializedVertices);
 }
 
 bool PlotTable2D::create()
@@ -30,39 +74,68 @@ bool PlotTable2D::create()
     QSqlQuery query("CREATE TABLE IF NOT EXISTS plot2D ("
                     " id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,"
                     " expression TEXT,"
-                    " vertices BLOB,"
-                    " indices BLOB"
+                    " vertices BLOB"
                     ");");
     query.exec();
     return query.next();
 }
 
-void PlotTable2D::insert(const Plot2D&)
+bool PlotTable2D::insert(const Plot2D& plot2D)
 {
-
+    QSqlQuery query;
+    query.prepare("INSERT INTO plot2D ("
+                  " expression,"
+                  " vertices) "
+                  "VALUES ("
+                  " :expression,"
+                  " :vertices"
+                  ");");
+    query.bindValue(":expression", plot2D.expression);
+    query.bindValue(":vertices", plot2D.serializeEdgeList());
+    qDebug() << "INSERT: " << query.lastError().text();
+    return query.exec();
 }
 
-void PlotTable2D::update(const Plot2D&)
+bool PlotTable2D::update(const Plot2D& plot2D)
 {
-
+    QSqlQuery query;
+    query.prepare("UPDATE plot2D SET"
+                  " vertices=:vertices"
+                  " WHERE expression=:expression ;");
+    QByteArray verticesArray = plot2D.serializeEdgeList();
+    query.bindValue(":vertices", verticesArray);
+    return query.exec();
 }
 
-void PlotTable2D::selectAll()
+Plot2D PlotTable2D::selectByExpression(const QString& selectExpression)
 {
-
+    QSqlQuery query;
+    query.prepare("SELECT * FROM plot2D WHERE expression = :expression ;");
+    query.bindValue(":expression", selectExpression);
+    query.exec();
+    query.next();
+    QString expression = query.value("expression").toString();
+    QByteArray arrayVertices = query.value("vertices").toByteArray();
+    qDebug() << "SELECT BY EXPRESSION: " << query.lastError().text();
+    return Plot2D(expression, arrayVertices);
 }
 
-void PlotTable2D::select(const QString &)
+bool PlotTable2D::existExpression(const QString& expression)
 {
-
+    QSqlQuery query;
+    query.prepare("SELECT * FROM plot2D WHERE expression = :expression;");
+    query.bindValue(":expression", expression);
+    query.exec();
+    qDebug() << "EXIST EXPRESSION: " << query.lastError().text();
+    return query.next();
 }
 
-bool PlotTable2D::existExpression(const QString &)
+bool PlotTable2D::remove(const Plot2D& plot2D)
 {
-
-}
-
-void PlotTable2D::remove(const Plot2D &)
-{
-
+    QSqlQuery query;
+    query.prepare("DELETE FROM plot2D WHERE expression = :expression ;");
+    query.bindValue(":expression", plot2D.expression);
+    query.exec();
+    qDebug() << "REMOVE BY EXPRESSION: " << query.lastError().text();
+    return query.next();
 }

@@ -34,8 +34,7 @@ namespace plot_builder{
     public slots:
         void workFinished();
     signals:
-        void buildingPlotFinish(XYZPlotBuilder*,
-                                std::shared_ptr<std::vector<Vertex>>, std::shared_ptr<std::vector<unsigned int>>);
+        void buildingPlotFinish(std::shared_ptr<std::vector<Vertex>>, std::shared_ptr<std::vector<unsigned int>>);
     private:
         std::vector<Cube> cubes_;
         Resolution resolution_;

@@ -1,19 +1,20 @@
 #include "Calculator/recursivedescent.h"
-#include "plotarea.h"
+#include "Marching Squares/marchingsquares.h"
+#include "plotarea2d.h"
 #include <QPainter>
 #include <vector>
 
-PlotArea::PlotArea(QWidget *parent): QWidget(parent)
+PlotArea2D::PlotArea2D(QWidget *parent): QWidget(parent)
 {
 
 }
 
-PlotArea::~PlotArea()
+PlotArea2D::~PlotArea2D()
 {
 
 }
 
-PlotType PlotArea::getTypeOfPlot(const QString & expression)
+PlotType PlotArea2D::getTypeOfPlot(const QString & expression)
 {
 
     if(expression.indexOf('x') != -1 && expression.indexOf('y') == -1 && expression.indexOf("φ") == -1)
@@ -32,17 +33,17 @@ PlotType PlotArea::getTypeOfPlot(const QString & expression)
 }
 
 
-void PlotArea::paintAXCoord(QPainter &painter)
+void PlotArea2D::paintAXCoord(QPainter &painter)
 {
     painter.drawLine(0,height()/2, width(),height()/2);
 }
 
-void PlotArea::paintAYCoord(QPainter &painter)
+void PlotArea2D::paintAYCoord(QPainter &painter)
 {
     painter.drawLine(width()/2 ,0 , width()/2, height());
 }
 
-void PlotArea::paintXCoord(QPainter &painter)
+void PlotArea2D::paintXCoord(QPainter &painter)
 {
     short coordX = 1;
     int displayWidth = width(), displayHeigth = height();
@@ -57,7 +58,7 @@ void PlotArea::paintXCoord(QPainter &painter)
     }
 }
 
-void PlotArea::paintYCoord(QPainter &painter)
+void PlotArea2D::paintYCoord(QPainter &painter)
 {
     short coordY = 1;
     int displayWidth = width(), displayHeigth = height();
@@ -72,7 +73,7 @@ void PlotArea::paintYCoord(QPainter &painter)
     }
 }
 
-void PlotArea::paintXGrid(QPainter &painter)
+void PlotArea2D::paintXGrid(QPainter &painter)
 {
     int displayWidth = width(), displayHeigth = height();
     for(int i = 40; i < displayHeigth/2; i +=40)
@@ -82,7 +83,7 @@ void PlotArea::paintXGrid(QPainter &painter)
     }
 }
 
-void PlotArea::paintYGrid(QPainter &painter)
+void PlotArea2D::paintYGrid(QPainter &painter)
 {
     int displayWidth = width(), displayHeigth = height();
     for(int i = 40; i < width()/2; i += 40)
@@ -92,7 +93,7 @@ void PlotArea::paintYGrid(QPainter &painter)
     }
 }
 
-void PlotArea::paintXYCoordAndGrid(QPainter &painter)
+void PlotArea2D::paintXYCoordAndGrid(QPainter &painter)
 {
     painter.begin(this);
     painter.setRenderHint(QPainter::Antialiasing);
@@ -108,17 +109,16 @@ void PlotArea::paintXYCoordAndGrid(QPainter &painter)
     painter.end();
 }
 
-void PlotArea::setExpressions(const std::vector<QString>& expressionsVector_)
+void PlotArea2D::setExpressions(const std::vector<QString>& expressionsVector_)
 {
     expressionsVector = expressionsVector_;
 }
 
 
-void PlotArea::paintEvent(QPaintEvent *event)
+void PlotArea2D::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
     QPainter painter;
-    std::vector<QPointF> pointsVector;
     if(expressionsVector.empty())
         return;
     painter.begin(this);

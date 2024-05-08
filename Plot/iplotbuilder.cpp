@@ -7,6 +7,8 @@
 #include <thread>
 #include <QVector>
 
+#include <Database/plottable2d.h>
+
 std::unique_ptr<IPlotBuilder> IPlotBuilder::makePlotBuilder(PlotType plotType)
 {
     switch (plotType)
@@ -27,11 +29,11 @@ void ExplicitPlotBuilder::draw(QPainter& painter, const QString& expression, int
 {
     std::vector<QPointF> vectorOfPoints;
     ExplicitPlotPointsCoordinate plotCoordinate;
-
+    float maxDiff = 0.35;
     plotCoordinate.getPointsForPlot(vectorOfPoints, expression, width, height);
     for(std::size_t i = 1; i < vectorOfPoints.size(); i++)
     {
-        if(fabs(vectorOfPoints[i].x() - vectorOfPoints[i - 1].x()) <= 0.35)
+        if(fabs(vectorOfPoints[i].x() - vectorOfPoints[i - 1].x()) <= maxDiff)
             painter.drawLine(vectorOfPoints[i - 1], vectorOfPoints[i]);
     }
 }
@@ -81,7 +83,19 @@ void ImplicitPlotBuilder::divideDisplay(float width, float height, float top, fl
 
 void ImplicitPlotBuilder::draw(QPainter& painter, const QString& expression, int width, int height)
 {
+    PlotTable2D table;
+    if(table.existExpression(expression))
+    {
+        Plot2D plot2D = table.selectByExpression(expression);
+        for(auto&& point: *plot2D.vertices)
+        {
+            painter.drawPoint((float)width/2.0 + point[0][0] *40.0, height/2.0 - (float)point[0][1] * 40.0);
+            painter.drawPoint((float)width/2.0 + point[1][0] *40.0, height/2.0 - (float)point[1][1] * 40.0);
+        }
+        return;
+    }
     std::vector<std::unique_ptr<ImplicitPlotWorker>> threadPool;
+    marching_squares::EdgeList* edgeList = new marching_squares::EdgeList();
     std::vector<Rectangle> rectangleVector;
     int countOfRect = (std::thread::hardware_concurrency() - 1) == 0 ? 1 : (std::thread::hardware_concurrency() - 1);
     divideDisplay(width, height, 0, 0, countOfRect, rectangleVector);
@@ -91,7 +105,7 @@ void ImplicitPlotBuilder::draw(QPainter& painter, const QString& expression, int
         float wEnd = wEnd = (rectangle.Left + rectangle.Width - width/2.0)/40.0;
         float hStart = (rectangle.Top - height/2.0)/40.0;
         float hEnd = hEnd = (rectangle.Top + rectangle.Height - height/2.0)/40.0;
-        ImplicitPlotWorker* worker = new ImplicitPlotWorker(expression, wStart, wEnd, hStart, hEnd,
+        ImplicitPlotWorker* worker = new ImplicitPlotWorker(expression, *edgeList, wStart, wEnd, hStart, hEnd,
                                                                   rectangle.Width, rectangle.Height, width, height, mut, painter);
         threadPool.emplace_back(worker);
     }
@@ -99,17 +113,17 @@ void ImplicitPlotBuilder::draw(QPainter& painter, const QString& expression, int
     {
         thread.get()->wait();
     }
+    Plot2D plot2D(expression, edgeList);
 
-}
+    if(table.existExpression(plot2D.expression))
+    {
+        table.update(plot2D);
+    }
+    else
+    {
+        table.insert(plot2D);
+    }
 
-void ImplicitPlotBuilder::drawHelper(const QString& expression,
-                                     float widthStart, float widthEnd,
-                                     float heightStart, float heightEnd,
-                                     float resolutionX, float resolutionY)
-{
-    std::vector<std::array<std::array<double, 2>, 2>> vectorOfPoints;
-    ImplicitPlotPointsCoordinate  plotCoordiante;
-    plotCoordiante.getPointsForPlot(vectorOfPoints, expression, widthStart, widthEnd, heightStart, heightEnd, resolutionX, resolutionY);
 }
 
 

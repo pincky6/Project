@@ -1,9 +1,13 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+
+#include "Database/calculationstable.h"
+
 #include "Calculator/recursivedescent.h"
 
 #include <QInputDialog>
 #include <QMessageBox>
+#include <QFile>
 #include <QMenu>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -184,6 +188,7 @@ void MainWindow::on_backButton_clicked()
     if(ui->stackedWidget_4->currentIndex() == (int)PlotAreas::PLOT_AREA_3D)
     {
         ui->graphicArea3D->destroyPlotBuffer();
+        ui->graphicArea3D->freeScheduler();
     }
 }
 
@@ -217,3 +222,16 @@ void MainWindow::on_3DModeChanged()
         }
     }
 }
+
+
+void MainWindow::on_generateSTLButton_clicked()
+{
+    QString userInput = QInputDialog::getText(this, "Введите название файла", "Название файла:", QLineEdit::Normal, "");
+    if(userInput.isEmpty()){
+        userInput = "3dModel.stl";
+    } else {
+        userInput += ".stl";
+    }
+    ui->graphicArea3D->loadToSTL(userInput);
+}
+

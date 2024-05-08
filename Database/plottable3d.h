@@ -9,7 +9,7 @@
 
 #include "Marching Cubes/types.h"
 
-#include "abstractplottable.h"
+#include "abstracttable.h"
 
 #include "serializablecontainers.h"
 
@@ -38,7 +38,7 @@ public:
     float maxScaleFactor;
 };
 
-class PlotTable3D: public AbstractPlotTable
+class PlotTable3D: public AbstractTable
 {
 public:
     bool create() override;

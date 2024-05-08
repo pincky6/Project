@@ -2,6 +2,7 @@
 #define IPLOTBUILDER_H
 #include <QPainter>
 #include <QMutex>
+#include "Marching Squares/marchingsquares.h"
 
 enum class PlotType
 {
@@ -41,7 +42,6 @@ class ImplicitPlotBuilder: public IPlotBuilder
     QMutex mut;
 public:
     void divideDisplay(float, float, float, float, int ,std::vector<Rectangle>& result);
-    void drawHelper(const QString&, float, float, float, float, float, float);
     void draw(QPainter&, const QString&, int, int) override;
 };
 

@@ -22,11 +22,15 @@ public:
     void resetPlot(std::shared_ptr<std::vector<Vertex>>,
                    std::shared_ptr<std::vector<unsigned int>>);
     void destroyPlotBuffer();
+    void freeScheduler();
+
+    void loadToSTL(const QString&);
     ~PlotArea3D();
 protected:
     void initializeGL() override;
     void resizeGL(int w, int h) override;
     void paintGL() override;
+
 
     void paintAxes();
     void paintPlot();

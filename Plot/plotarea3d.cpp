@@ -19,7 +19,9 @@ PlotArea3D::PlotArea3D(QWidget *parent)
     defaultLength_(20.0f), scaleFactor_(1.0f), maxScaleFactor_(1.0f), mZ_(-5.0f)
 {
     connect(&scheduler_, &PlotScheduler::updatePlot, this, &PlotArea3D::receiveData);
+    scheduler_.start();
 }
+
 
 void PlotArea3D::setExpressions(const std::vector<QString>& newExpressionsVector)
 {
@@ -78,7 +80,38 @@ void PlotArea3D::resetPlot(std::shared_ptr<std::vector<Vertex>> plotVertices,
     indexPlotBuffer_.allocate(plot3D.indices->data(),
                               plot3D.indices->size() * sizeof(unsigned int));
     indexPlotBuffer_.release();
+    QFile file("testSTL.stl");
+    file.open(QIODevice::WriteOnly);
+    QString facetString = "facet normal  %0 %1 %2\n"
+                          "outer loop\n"
+                          "vertex %3 %4 %5\n"
+                          "vertex %6 %7 %8\n"
+                          "vertex %9 %10 %11\n"
+                          "endloop\n"
+                          "endfacet\n";
+    file.write("solid example\n");
+    for(std::size_t i = 0; i < plot3D.indices->size(); i += 3)
+    {
+        Vertex& vertex1 = plot3D.vertices.get()->at(i);
+        Vertex& vertex2 = plot3D.vertices.get()->at(i + 1);
+        Vertex& vertex3 = plot3D.vertices.get()->at(i + 2);
+        file.write(facetString.arg(vertex1.normal.x())
+                                 .arg(vertex1.normal.y())
+                                 .arg(vertex1.normal.z())
+                                 .arg(vertex1.position.x())
+                                 .arg(vertex1.position.y())
+                                 .arg(vertex1.position.z())
+                                 .arg(vertex2.position.x())
+                                 .arg(vertex2.position.y())
+                                 .arg(vertex2.position.z())
+                                 .arg(vertex3.position.x())
+                                 .arg(vertex3.position.y())
+                                 .arg(vertex3.position.z()).toStdString().data()
+                   );
 
+    }
+    file.write("endsolid example");
+    file.close();
     initAxes(defaultLength_ * scaleFactor_);
 
     update();
@@ -211,6 +244,16 @@ void PlotArea3D::destroyPlotBuffer()
         arrayPlotBuffer_.destroy();
         indexPlotBuffer_.destroy();
     }
+}
+
+void PlotArea3D::freeScheduler()
+{
+    scheduler_.freeQueue();
+}
+
+void PlotArea3D::loadToSTL(const QString &)
+{
+
 }
 
 void PlotArea3D::mousePressEvent(QMouseEvent *event)

@@ -73,6 +73,7 @@ void PolarPlotPointsCoordinate::getPointsForPlot(std::vector<QPointF> &pointsVec
 void ImplicitPlotPointsCoordinate::getPointsForPlot(
         std::vector<std::array<std::array<double, 2>, 2>>& pointsVector,
         const QString &expression,
+        marching_squares::EdgeList& edgeList,
         float widthStart,float widthEnd,
         float heightStart, float heightEnd,
         int width, int height)

@@ -114,16 +114,16 @@ MarchingCubes::MarchingCubes(const QString& expression, RecursiveDecsent& recurs
         float yLower = yRange[0];
         float zLower = zRange[0];
 
-        for (int i = 0; i + 1 < resolution[0]; i++)
+        for (int i = 0; i + 1 <= resolution[0]; i++)
         {
             const float x = xLower + i * dx;
-            for (int j = 0; j + 1 < resolution[1]; j++)
+            for (int j = 0; j + 1 <= resolution[1]; j++)
             {
                 const float y = yLower + j * dy;
-                for (int k = 0; k + 1 < resolution[2]; k++)
+                for (int k = 0; k + 1 <= resolution[2]; k++)
                 {
                     const float z = zLower + k * dz;
-
+                    try{
                     GridCell cell =
                         {
                             {
@@ -149,6 +149,11 @@ MarchingCubes::MarchingCubes(const QString& expression, RecursiveDecsent& recurs
                         };
                     triangulate_cell(cell, isovalue, points, indices,
                                     xRange, yRange, zRange);
+                    }
+                    catch(...)
+                    {
+
+                    }
                 }
             }
         }

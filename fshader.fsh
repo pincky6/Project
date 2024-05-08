@@ -23,7 +23,7 @@ void main(void)
     resultColor += diffColor;
     vec4 ambientColor = ambientFactor * diffMatColor;
     resultColor += ambientColor;
-    vec4 specularColor = vec4(1.0f, 1.0f, 1.0f, 1.0f) * u_lightPower * pow(max(0.0f, dot(reflectLight, -eyeVect)), specularFactor);
+    vec4 specularColor = vec4(0.5f, 0.5f, 0.5f, 1.0f) * u_lightPower * pow(max(0.0f, dot(reflectLight, -eyeVect)), specularFactor);
     resultColor += specularColor;
     gl_FragColor = resultColor;
 }

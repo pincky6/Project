@@ -12,9 +12,11 @@ CONFIG += c++14
 SOURCES += \
     Calculator/operands/MathError.cpp \
     "Marching Squares"/edge.cpp \
+    Database/calculationstable.cpp \
     Database/plottable2d.cpp \
     Database/plottable3d.cpp \
     Plot/iplotbuilder.cpp \
+    Plot/plotarea2d.cpp \
     PlotBuilderWorkers/abstractplotworker.cpp \
     PlotBuilderWorkers/implicitplotworker.cpp \
     PlotBuilderWorkers/plotscheduler.cpp \
@@ -27,7 +29,6 @@ SOURCES += \
     "Marching Cubes"/marching_cubes.cpp\
     figures.cpp\
     axis.cpp\
-    Plot/plotarea.cpp \
     Plot/plotpointscoordinate.cpp \
     Plot/plotarea3d.cpp\
     "System Widget"/systemwidget.cpp\
@@ -39,11 +40,13 @@ SOURCES += \
 
 HEADERS += \
     "Marching Squares"/edge.h \
-    Database/abstractplottable.h \
+    Database/abstracttable.h \
+    Database/calculationstable.h \
     Database/plottable2d.h \
     Database/plottable3d.h \
     Database/serializablecontainers.h \
     Plot/iplotbuilder.h \
+    Plot/plotarea2d.h \
     PlotBuilderWorkers/abstractplotworker.h \
     PlotBuilderWorkers/implicitplotworker.h \
     PlotBuilderWorkers/plotscheduler.h \
@@ -56,7 +59,6 @@ HEADERS += \
     "Marching Cubes"/types.h\
     figures.h\
     axis.h\
-    Plot/plotarea.h \
     Plot/plotpointscoordinate.h \
     Plot/plotarea3d.h\
     "System Widget"/systemwidget.h\

@@ -82,15 +82,15 @@ void XYZPlotBuilder::work()
         if((p.position.z() <= yellow_bound_min && p.position.z() >= red_bound_min)||
             (p.position.z() >= yellow_bound_max && p.position.z() <= red_bound_max))
         {
-            p.color = QVector3D(1.0f, 1.0f, 0.0f);
+            p.color = QVector3D(0.5f, 0.5f, 0.0f);
         }
         else if(p.position.z() <= red_bound_min || p.position.z() >= red_bound_max)
         {
-            p.color = QVector3D(1.0f, 0.0f, 0.0f);
+            p.color = QVector3D(0.5f, 0.0f, 0.0f);
         }
         else
         {
-            p.color = QVector3D(0.0, 1.0f, 0.0f);
+            p.color = QVector3D(0.0, 0.5f, 0.0f);
         }
     });
 }
@@ -105,7 +105,7 @@ void XYZPlotBuilder::wait()
     if(vertices_ == nullptr) return;
     if((*vertices_).size() != 0)
     {
-        emit buildingPlotFinish(this, vertices_, indices_);
+        emit buildingPlotFinish(vertices_, indices_);
     }
 }
 
@@ -144,6 +144,6 @@ void XYZPlotBuilder::workFinished()
     thread_->quit();
     if((*vertices_).size() > 0)
     {
-        emit buildingPlotFinish(this, vertices_, indices_);
+        emit buildingPlotFinish(vertices_, indices_);
     }
 }

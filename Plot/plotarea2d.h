@@ -1,18 +1,18 @@
-#ifndef PLOTAREA_H
-#define PLOTAREA_H
+#ifndef PLOTAREA2D_H
+#define PLOTAREA2D_H
 
 #include <QWidget>
 #include "iplotbuilder.h"
 
-class PlotArea: public QWidget
+class PlotArea2D: public QWidget
 {
     Q_OBJECT
 
 public:
-    PlotArea(QWidget *parent = nullptr);
+    PlotArea2D(QWidget *parent = nullptr);
     void paintEvent(QPaintEvent*);
     void setExpressions(const std::vector<QString>&);
-    ~PlotArea();
+    ~PlotArea2D();
 
 private:
     PlotType getTypeOfPlot(const QString&);

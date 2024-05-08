@@ -4,6 +4,8 @@
 #include <memory>
 #include <QPointF>
 
+#include "Marching Squares/marchingsquares.h"
+
 enum class PlotPointsCoordinateType
 {
     Explicit, Polar, Implicit
@@ -26,6 +28,7 @@ public:
 class ImplicitPlotPointsCoordinate
 {
 public: 
-    void getPointsForPlot(std::vector<std::array<std::array<double, 2>, 2>>&, const QString&, float, float, float, float, int, int);
+    void getPointsForPlot(std::vector<std::array<std::array<double, 2>, 2>>&, const QString&,
+                          marching_squares::EdgeList& edge, float, float, float, float, int, int);
 };
 #endif // PLOTPOINTSCOORDINATE_H

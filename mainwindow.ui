@@ -1014,12 +1014,12 @@
         <item>
          <widget class="QStackedWidget" name="stackedWidget_4">
           <property name="currentIndex">
-           <number>1</number>
+           <number>0</number>
           </property>
           <widget class="QWidget" name="page_5">
            <layout class="QVBoxLayout" name="verticalLayout_6">
             <item>
-             <widget class="PlotArea" name="graphicArea" native="true"/>
+             <widget class="PlotArea2D" name="graphicArea" native="true"/>
             </item>
             <item>
              <widget class="QPushButton" name="pushButton">
@@ -1036,6 +1036,13 @@
              <layout class="QVBoxLayout" name="verticalLayout_7">
               <item>
                <widget class="PlotArea3D" name="graphicArea3D"/>
+              </item>
+              <item>
+               <widget class="QPushButton" name="generateSTLButton">
+                <property name="text">
+                 <string>Generate STL</string>
+                </property>
+               </widget>
               </item>
               <item>
                <widget class="QPushButton" name="backButton">
@@ -1108,15 +1115,15 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>PlotArea</class>
-   <extends>QWidget</extends>
-   <header>Plot/plotarea.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>PlotArea3D</class>
    <extends>QOpenGLWidget</extends>
    <header location="global">Plot/plotarea3d.h</header>
+  </customwidget>
+  <customwidget>
+   <class>PlotArea2D</class>
+   <extends>QWidget</extends>
+   <header location="global">Plot/plotarea2d.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>
