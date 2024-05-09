@@ -101,9 +101,13 @@ bool PlotTable2D::update(const Plot2D& plot2D)
     QSqlQuery query;
     query.prepare("UPDATE plot2D SET"
                   " vertices=:vertices"
-                  " WHERE expression=:expression ;");
+                  " WHERE expression=:expression;");
+
     QByteArray verticesArray = plot2D.serializeEdgeList();
+
+    query.bindValue(":expression", plot2D.expression);
     query.bindValue(":vertices", verticesArray);
+
     return query.exec();
 }
 

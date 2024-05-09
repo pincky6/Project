@@ -2,7 +2,6 @@
 #define IPLOTBUILDER_H
 #include <QPainter>
 #include <QMutex>
-#include "Marching Squares/marchingsquares.h"
 
 enum class PlotType
 {

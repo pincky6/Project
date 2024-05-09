@@ -110,11 +110,15 @@ bool PlotTable3D::update(const Plot3D& plot3D)
     query.prepare("UPDATE plot3D SET"
                   " vertices=:vertices, indices=:indices, maxScaleFactor = :maxScaleFactor"
                   " WHERE expression=:expression ;");
+
     QByteArray verticesArray = plot3D.serializeVertices();
     QByteArray indicesArray = plot3D.serializeIndices();
+
+    query.bindValue(":expression", plot3D.expression);
     query.bindValue(":vertices", verticesArray);
     query.bindValue(":indices", indicesArray);
     query.bindValue(":maxScaleFactor", plot3D.maxScaleFactor);
+
     return query.exec();
 }
 
@@ -152,4 +156,27 @@ bool PlotTable3D::removeByExpression(const Plot3D& plot3D)
     qDebug() << "REMOVE BY EXPRESSION: " << query.lastError().text();
     return query.next();
 }
+
+//CREATE TABLE IF NOT EXISTS Records (
+//    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,
+//    record_type_id INTEGER NOT NULL,
+//    related_record_id INTEGER NOT NULL,
+//    FOREIGN KEY (record_type_id) REFERENCES RecordTypes(id),
+//    FOREIGN KEY (related_record_id) REFERENCES ??? -- Здесь нужно указать, к какой из трех таблиц относится запись
+//);
+
+//CREATE TABLE IF NOT EXISTS RecordTypes (
+//    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,
+//    name TEXT NOT NULL
+//    );
+
+//CREATE TRIGGER IF NOT EXISTS DeleteRelatedRecord
+//    AFTER DELETE ON Records
+//        FOR EACH ROW
+//            BEGIN
+//                DELETE FROM
+//                    CalculationHistory -- Здесь нужно указать имя таблицы, связанной с CalculationHistory
+//    WHERE id = OLD.related_record_id;
+//-- Аналогично для Plot2D и Plot3D
+//    END;
 

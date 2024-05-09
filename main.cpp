@@ -2,8 +2,10 @@
 
 #include <QApplication>
 #include <QtSql/QSqlDatabase>
+#include "Database/calculationstable.h"
 #include "Database/plottable2d.h"
 #include "Database/plottable3d.h"
+#include "Database/typetable.h"
 
 int main(int argc, char *argv[])
 {
@@ -17,13 +19,23 @@ int main(int argc, char *argv[])
     }
     PlotTable2D plotTable2D;
     PlotTable3D plotTable3D;
-    if(plotTable2D.create())
+    TypeTable typeTable;
+    CalculationsTable calculationsTable;
+    if(!plotTable2D.create())
     {
         qDebug() << "Table plot 2d didn't created";
     }
-    if(plotTable3D.create())
+    if(!plotTable3D.create())
     {
         qDebug() << "Table plot 3d didn't created";
+    }
+    if(!calculationsTable.create())
+    {
+        qDebug() << "Table calculations history didn't created";
+    }
+    if(!typeTable.create())
+    {
+        qDebug() << "Table type didn't created";
     }
     MainWindow w;
     w.show();

@@ -147,8 +147,20 @@ void MainWindow::on_pushButton_equal_clicked()
 {
     RecursiveDecsent recursiveDecsent;
     try{
-    Operand answer = recursiveDecsent.calculate(ui->textEdit->toPlainText());
-    ui->textEdit->setText(QString::fromStdString(answer.toString()));
+        CalculationsTable table;
+        CalculationResult calculationResult;
+        calculationResult.expression = ui->textEdit->toPlainText();
+        Operand answer = recursiveDecsent.calculate(ui->textEdit->toPlainText());
+        calculationResult.result = QString::fromStdString(answer.toString());
+        ui->textEdit->setText(calculationResult.result);
+        if(table.existExpression(calculationResult.result))
+        {
+            table.update(calculationResult);
+        }
+        else
+        {
+            table.insert(calculationResult);
+        }
     }
     catch(const std::exception& exception)
     {
