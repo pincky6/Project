@@ -75,33 +75,47 @@ bool PlotTable3D::create()
                     " expression TEXT,"
                     " vertices BLOB,"
                     " indices BLOB,"
-                    " maxScaleFactor REAL"
+                    " maxScaleFactor REAL,"
+                    " recordId INTEGER NOT NULL,"
+                    " FOREIGN KEY (recordId) REFERENCES records(id) ON DELETE CASCADE"
                     ");");
-    query.exec();
+    bool check = query.exec();
     qDebug() << "CREATE: " << query.lastError().text();
-    return query.next();
+    QSqlQuery plot3DInsertTrigger("CREATE TRIGGER IF NOT EXISTS plot3D_insert_trigger "
+                                  "BEFORE INSERT ON plot3D "
+                                  "BEGIN "
+                                  "INSERT INTO records (recordTypeId) VALUES (3); "
+                                  "END; ");
+    plot3DInsertTrigger.exec();
+    qDebug() << "TRIGGER: " << plot3DInsertTrigger.lastError().text();
+    return check;
 }
 
 bool PlotTable3D::insert(const Plot3D& plot3D)
 {
+    int index = getIndex();
     QSqlQuery query;
     query.prepare("INSERT INTO plot3D ("
                   " expression,"
                   " vertices,"
                   " indices,"
-                  " maxScaleFactor) "
+                  " maxScaleFactor,"
+                  " recordId) "
                   "VALUES ("
                   " :expression,"
                   " :vertices,"
                   " :indices,"
-                  " :maxScaleFactor"
+                  " :maxScaleFactor,"
+                  " :recordId"
                   ");");
     query.bindValue(":expression", plot3D.expression);
     query.bindValue(":vertices", plot3D.serializeVertices());
     query.bindValue(":indices", plot3D.serializeIndices());
     query.bindValue(":maxScaleFactor", plot3D.maxScaleFactor);
-    qDebug() << "INSERT: " << query.lastError().text();
-    return query.exec();
+    query.bindValue(":recordId", index);
+    bool check = query.exec();
+    qDebug() << "INSERT PLOT3D: " << query.lastError().text();
+    return check;
 }
 
 bool PlotTable3D::update(const Plot3D& plot3D)

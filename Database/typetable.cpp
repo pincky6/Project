@@ -10,11 +10,12 @@ TypeTable::TypeTable()
 
 bool TypeTable::create()
 {
-    QSqlQuery query("CREATE TABLE IF NOT EXISTS tablesType ("
+    QSqlQuery query("CREATE TABLE IF NOT EXISTS tableTypes ("
                     " id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,"
                     " type TEXT"
                     ");");
-    query.exec();
+    bool check = query.exec();
+    qDebug() << "CREATE TYPES: "<< query.lastError().text();
     if(!existExpression("CalculationsHistory"))
     {
         insert("CalculationsHistory");
@@ -27,13 +28,13 @@ bool TypeTable::create()
     {
         insert("Plot3D");
     }
-    return query.next();
+    return check;
 }
 
 bool TypeTable::insert(const QString& type)
 {
     QSqlQuery query;
-    query.prepare("INSERT INTO tablesType(type) VALUES(:type);");
+    query.prepare("INSERT INTO tableTypes(type) VALUES(:type);");
 
     query.bindValue(":type", type);
     qDebug() << "INSERT: " << query.lastError().text();
@@ -44,7 +45,7 @@ bool TypeTable::insert(const QString& type)
 bool TypeTable::existExpression(const QString& type)
 {
     QSqlQuery query;
-    query.prepare("SELECT * FROM tablesType WHERE type = :type;");
+    query.prepare("SELECT * FROM tableTypes WHERE type = :type;");
     query.bindValue(":type", type);
     query.exec();
     qDebug() << "EXIST EXPRESSION: " << query.lastError().text();

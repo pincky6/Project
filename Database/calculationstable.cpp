@@ -16,26 +16,40 @@ bool CalculationsTable::create()
     QSqlQuery query("CREATE TABLE IF NOT EXISTS calculationsHistory ("
                     " id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,"
                     " expression TEXT,"
-                    " result TEXT"
+                    " result TEXT,"
+                    " recordId INTEGER NOT NULL,"
+                    " FOREIGN KEY (recordId) REFERENCES records(id) ON DELETE CASCADE"
                     ");");
-    query.exec();
-    return query.next();
+    bool check = query.exec();
+    qDebug() << "CREATE: " << query.lastError().text();
+    QSqlQuery calculationsHistoryInsertTrigger("CREATE TRIGGER IF NOT EXISTS calculations_history_insert_trigger "
+                                               "BEFORE INSERT ON calculationsHistory "
+                                               "BEGIN "
+                                               "INSERT INTO records (recordTypeId) VALUES (1); "
+                                               "END; ");
+    calculationsHistoryInsertTrigger.exec();
+    qDebug() << "TRIGGER: " << calculationsHistoryInsertTrigger.lastError().text();
+    return check;
 }
 
 bool CalculationsTable::insert(const CalculationResult& calculationResult)
 {
+    int index = getIndex();
     QSqlQuery query;
     query.prepare("INSERT INTO calculationsHistory ("
                   " expression,"
-                  " result) "
+                  " result, "
+                  " recordId) "
                   "VALUES ("
                   " :expression,"
-                  " :result"
-                  ");");
+                  " :result, "
+                  " :recordId);");
     query.bindValue(":expression", calculationResult.expression);
     query.bindValue(":result", calculationResult.result);
+    query.bindValue(":recordId", index);
+    bool check = query.exec();
     qDebug() << "INSERT: " << query.lastError().text();
-    return query.exec();
+    return check;
 }
 
 bool CalculationsTable::update(const CalculationResult& calculationResult)

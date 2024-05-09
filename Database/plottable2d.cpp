@@ -1,5 +1,5 @@
 #include "plottable2d.h"
-
+#include <QThread>
 #include <QSqlQuery>
 #include <QSqlError>
 
@@ -74,26 +74,42 @@ bool PlotTable2D::create()
     QSqlQuery query("CREATE TABLE IF NOT EXISTS plot2D ("
                     " id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,"
                     " expression TEXT,"
-                    " vertices BLOB"
+                    " vertices BLOB,"
+                    " recordId INTEGER NOT NULL,"
+                    " FOREIGN KEY (recordId) REFERENCES records(id) ON DELETE CASCADE"
                     ");");
-    query.exec();
-    return query.next();
+    bool check = query.exec();
+    qDebug() << "CREATE 3D: " << query.lastError().text();
+
+    QSqlQuery plot2DInsertTrigger("CREATE TRIGGER IF NOT EXISTS plot2D_insert_trigger "
+                                  "BEFORE INSERT ON plot2D "
+                                  "BEGIN "
+                                  "INSERT INTO records (recordTypeId) VALUES (2); "
+                                  "END; ");
+    plot2DInsertTrigger.exec();
+    qDebug() << "TRIGGER: " << plot2DInsertTrigger.lastError().text();
+    return check;
 }
 
 bool PlotTable2D::insert(const Plot2D& plot2D)
 {
+    int index = getIndex();
     QSqlQuery query;
     query.prepare("INSERT INTO plot2D ("
                   " expression,"
-                  " vertices) "
+                  " vertices,"
+                  " recordId) "
                   "VALUES ("
                   " :expression,"
-                  " :vertices"
+                  " :vertices,"
+                  " :recordId"
                   ");");
     query.bindValue(":expression", plot2D.expression);
     query.bindValue(":vertices", plot2D.serializeEdgeList());
-    qDebug() << "INSERT: " << query.lastError().text();
-    return query.exec();
+    query.bindValue(":recordId", index);
+    bool check = query.exec();
+    qDebug() << "INSERT PLOT2D: " << query.lastError().text();
+    return check;
 }
 
 bool PlotTable2D::update(const Plot2D& plot2D)
