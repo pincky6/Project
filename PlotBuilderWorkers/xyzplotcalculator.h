@@ -28,9 +28,11 @@ using Resolution = std::array<float, 3>;
         void work() override;
         std::vector<Vertex>& getVertices();
         std::vector<unsigned int>& getIndices();
+
         ~XYZPlotCalculator(){}
     signals:
         void sendData(std::vector<Vertex>, std::vector<unsigned int>);
+        void sendProgress(float);
     private:
         const QString& expression_;
 

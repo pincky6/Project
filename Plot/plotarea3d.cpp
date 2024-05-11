@@ -20,6 +20,7 @@ PlotArea3D::PlotArea3D(QWidget *parent)
 {
     connect(&scheduler_, &PlotScheduler::updatePlot, this, &PlotArea3D::receiveData);
     scheduler_.start();
+    modelScheduler_.start();
 }
 
 
@@ -41,7 +42,6 @@ void PlotArea3D::setExpressions(const std::vector<QString>& newExpressionsVector
             maxScaleFactor_ = plot3D.maxScaleFactor;
             scaleFactor_ = plot3D.maxScaleFactor;
             resetPlot(plot3D.vertices, plot3D.indices);
-            qDebug() << "END SET EXPRE";
         }
     }
 }
@@ -80,38 +80,7 @@ void PlotArea3D::resetPlot(std::shared_ptr<std::vector<Vertex>> plotVertices,
     indexPlotBuffer_.allocate(plot3D.indices->data(),
                               plot3D.indices->size() * sizeof(unsigned int));
     indexPlotBuffer_.release();
-    QFile file("testSTL.stl");
-    file.open(QIODevice::WriteOnly);
-    QString facetString = "facet normal  %0 %1 %2\n"
-                          "outer loop\n"
-                          "vertex %3 %4 %5\n"
-                          "vertex %6 %7 %8\n"
-                          "vertex %9 %10 %11\n"
-                          "endloop\n"
-                          "endfacet\n";
-    file.write("solid example\n");
-    for(std::size_t i = 0; i < plot3D.indices->size(); i += 3)
-    {
-        Vertex& vertex1 = plot3D.vertices.get()->at(i);
-        Vertex& vertex2 = plot3D.vertices.get()->at(i + 1);
-        Vertex& vertex3 = plot3D.vertices.get()->at(i + 2);
-        file.write(facetString.arg(vertex1.normal.x())
-                                 .arg(vertex1.normal.y())
-                                 .arg(vertex1.normal.z())
-                                 .arg(vertex1.position.x())
-                                 .arg(vertex1.position.y())
-                                 .arg(vertex1.position.z())
-                                 .arg(vertex2.position.x())
-                                 .arg(vertex2.position.y())
-                                 .arg(vertex2.position.z())
-                                 .arg(vertex3.position.x())
-                                 .arg(vertex3.position.y())
-                                 .arg(vertex3.position.z()).toStdString().data()
-                   );
 
-    }
-    file.write("endsolid example");
-    file.close();
     initAxes(defaultLength_ * scaleFactor_);
 
     update();
@@ -246,14 +215,30 @@ void PlotArea3D::destroyPlotBuffer()
     }
 }
 
-void PlotArea3D::freeScheduler()
+void PlotArea3D::freeSchedulers()
 {
     scheduler_.freeQueue();
+    modelScheduler_.freeQueue();
 }
 
-void PlotArea3D::loadToSTL(const QString &)
+void PlotArea3D::loadToSTL(const QString& filename)
 {
-
+    float length = defaultLength_ * scaleFactor_;
+    Cube field(Vertex(-length, -length, -length), length * 2, length * 2, length * 2);
+    auto cubes = field.divide(1);
+    if(cubes.size() == 0)
+    {
+        return;
+    }
+    std::unique_ptr<STLModelBuilder> builder(new STLModelBuilder());
+    if(expressionsVector_.size() != 0)
+    {
+        builder->setFilename(filename);
+        builder->setExpression(expressionsVector_[0]);
+        builder->setResolution({length * 10, length * 10, length * 10});
+        builder->setCube(cubes[0]);
+        modelScheduler_.addTask(std::move(builder), this);
+    }
 }
 
 void PlotArea3D::mousePressEvent(QMouseEvent *event)
@@ -309,6 +294,7 @@ void PlotArea3D::receiveData(std::shared_ptr<std::vector<Vertex>> plotVertices,
                              std::shared_ptr<std::vector<unsigned int>> plotIndices)
 {
     qDebug() << "receive plot";
+
     resetPlot(plotVertices, plotIndices);
 }
 
@@ -333,8 +319,10 @@ void PlotArea3D::initShaders()
 void PlotArea3D::initPlotBuilder(float length)
 {
     qDebug() << "init plot";
+
     Cube field(Vertex(-length, -length, -length), length * 2, length * 2, length * 2);
     auto cubes = field.divide(std::thread::hardware_concurrency() - 1);
+    qDebug() << cubes.size();
     std::unique_ptr<XYZPlotBuilder> builder(new XYZPlotBuilder());
     if(expressionsVector_.size() != 0)
     {
@@ -383,3 +371,9 @@ void PlotArea3D::initAxes(float length)
     }
 
 }
+
+
+//Построение оболочки: Один из популярных методов закрытия дыр в трехмерных моделях — это построение выпуклой оболочки (convex hull) вокруг модели. Этот алгоритм позволяет найти внешние грани модели, которые могут быть использованы для закрытия дыр.
+//Триангуляция: Другой метод — это триангуляция поверхности модели. Путем разбиения поверхности на треугольники можно обнаружить и заполнить дыры.
+//Алгоритмы реконструкции поверхности: Некоторые алгоритмы, такие как Marching Cubes или Poisson Surface Reconstruction, могут восстановить поверхность модели, включая закрытие дыр.
+//Методы, основанные на графах: Графовые алгоритмы могут помочь найти связи между вершинами модели и определить, какие грани следует добавить для закрытия дыр.

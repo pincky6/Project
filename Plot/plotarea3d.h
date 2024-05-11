@@ -10,6 +10,7 @@
 #include <QMutex>
 
 #include "PlotBuilderWorkers/plotscheduler.h"
+#include "PlotBuilderWorkers/stlmodelscheduler.h"
 #include <QMatrix4x4>
 
 class PlotArea3D final: public QOpenGLWidget, public QOpenGLFunctions
@@ -22,7 +23,7 @@ public:
     void resetPlot(std::shared_ptr<std::vector<Vertex>>,
                    std::shared_ptr<std::vector<unsigned int>>);
     void destroyPlotBuffer();
-    void freeScheduler();
+    void freeSchedulers();
 
     void loadToSTL(const QString&);
     ~PlotArea3D();
@@ -60,6 +61,7 @@ private:
     QQuaternion rotation_;
 
     plot_builder::PlotScheduler scheduler_;
+    plot_builder::STLModelScheduler modelScheduler_;
 
     float defaultLength_;
     float scaleFactor_;

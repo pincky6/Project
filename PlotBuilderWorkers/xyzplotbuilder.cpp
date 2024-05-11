@@ -20,6 +20,7 @@ void XYZPlotBuilder::connect()
     QThread* threadPtr = thread_.get();
     QObject::connect(threadPtr, &QThread::started, this, &XYZPlotBuilder::run);
     QObject::connect(this, &XYZPlotBuilder::finished, this, &XYZPlotBuilder::workFinished);
+    QObject::connect(this, &XYZPlotBuilder::finished, &*threadPtr, &QThread::quit);
     moveToThread(thread_.get());
 }
 

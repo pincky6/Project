@@ -15,13 +15,13 @@ public:
     virtual void work() = 0;
     virtual void setRunning(bool);
     virtual void wait();
-    virtual void quit();
     virtual void stopThread();
     virtual ~AbstractPlotWorker();
 signals:
     void finished();
 public slots:
     void whileRun();
+    virtual void quit();
     void run();
 protected:
     bool flag_;

@@ -200,7 +200,7 @@ void MainWindow::on_backButton_clicked()
     if(ui->stackedWidget_4->currentIndex() == (int)PlotAreas::PLOT_AREA_3D)
     {
         ui->graphicArea3D->destroyPlotBuffer();
-        ui->graphicArea3D->freeScheduler();
+        ui->graphicArea3D->freeSchedulers();
     }
 }
 

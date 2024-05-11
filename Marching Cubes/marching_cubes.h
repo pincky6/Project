@@ -1,10 +1,7 @@
-/*
-    Tables and conventions from
-    http://paulbourke.net/geometry/polygonise/
-*/
-
 #ifndef MARCHING_CUBES_HPP
 #define MARCHING_CUBES_HPP
+
+#include <QObject>
 
 #include <utility>
 #include <vector>
@@ -18,14 +15,18 @@ namespace plot_algorithms
 using Range = std::array<float, 2>;
 using Resolution = std::array<float, 3>;
 using VerticesAndIndices = std::tuple<std::vector<Vertex>, std::vector<unsigned int>>;
-    class MarchingCubes
+
+    class MarchingCubes: public QObject
     {
+        Q_OBJECT
     public:
         MarchingCubes();
-        MarchingCubes(const QString&, RecursiveDecsent& );
+        MarchingCubes(const QString&, RecursiveDecsent&, QObject* parent = nullptr);
 
         VerticesAndIndices triangulate_field(Range xRange, Range yRange, Range zRange,
                                              Resolution resolution, float isovalue);
+    signals:
+        void sendProgress(float);
     private:
         int calculate_cube_index(GridCell& cell, float isovalue);
 

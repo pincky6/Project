@@ -13,7 +13,7 @@ namespace plot_algorithms
 MarchingCubes::MarchingCubes(): vertices_cnt_(0)
 {}
 
-MarchingCubes::MarchingCubes(const QString& expression, RecursiveDecsent& recursiveDescent)
+MarchingCubes::MarchingCubes(const QString& expression, RecursiveDecsent& recursiveDescent, QObject* parent): QObject(parent)
 {
     expression_ = expression;
     recursiveDescent_ = recursiveDescent;
@@ -114,13 +114,13 @@ MarchingCubes::MarchingCubes(const QString& expression, RecursiveDecsent& recurs
         float yLower = yRange[0];
         float zLower = zRange[0];
 
-        for (int i = 0; i + 1 <= resolution[0]; i++)
+        for (int i = 0; i <= resolution[0] + 1; i++)
         {
             const float x = xLower + i * dx;
-            for (int j = 0; j + 1 <= resolution[1]; j++)
+            for (int j = 0; j <= resolution[1] + 1; j++)
             {
                 const float y = yLower + j * dy;
-                for (int k = 0; k + 1 <= resolution[2]; k++)
+                for (int k = 0; k <= resolution[2] + 1; k++)
                 {
                     const float z = zLower + k * dz;
                     try{
@@ -156,6 +156,7 @@ MarchingCubes::MarchingCubes(const QString& expression, RecursiveDecsent& recurs
                     }
                 }
             }
+            emit sendProgress(static_cast<float>(i) / static_cast<float>((resolution[0] + 1)));
         }
         vertices_cnt_ = 0;
         return std::make_tuple(points, indices);

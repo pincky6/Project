@@ -2,6 +2,8 @@
 
 #include <QApplication>
 #include <QtSql/QSqlDatabase>
+#include <QFile>
+
 #include "Database/calculationstable.h"
 #include "Database/plottable2d.h"
 #include "Database/plottable3d.h"

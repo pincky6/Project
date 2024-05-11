@@ -34,7 +34,9 @@ namespace plot_builder
 
     void XYZPlotCalculator::work()
     {
-        auto plot = plot_algorithms::MarchingCubes(expression_, recursiveDescent).triangulate_field(xRange_, yRange_, zRange_, resolution_, 0.9);
+        auto marchingCubes = plot_algorithms::MarchingCubes(expression_, recursiveDescent);
+        QObject::connect(&marchingCubes, &plot_algorithms::MarchingCubes::sendProgress, this, &XYZPlotCalculator::sendProgress);
+        auto plot = marchingCubes.triangulate_field(xRange_, yRange_, zRange_, resolution_, 0.9);
         std::for_each(std::get<0>(plot).begin(), std::get<0>(plot).end(), [this](Vertex& v){
             v.position.setX(v.position.x()/screenResolution_[0]);
             v.position.setY(v.position.y() / screenResolution_[1]);
