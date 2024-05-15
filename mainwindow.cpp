@@ -15,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    QObject::connect(ui->historyWidget, &HistoryWidget::doubleClicked, this, &MainWindow::historySwitch);
     createMenuForButton(ui->pushButton_sinFunctions, {"sin", "asin", "sinh", "asinh"}, &MainWindow::functionButtonMenuClicked);
     createMenuForButton(ui->pushButton_cosFunctions, {"cos", "acos", "cosh", "acosh"}, &MainWindow::functionButtonMenuClicked);
     createMenuForButton(ui->pushButton_tanFunctions, {"tan", "atan", "tanh", "atanh"},  &MainWindow::functionButtonMenuClicked);
@@ -82,7 +83,9 @@ void MainWindow::on_swapLayoutButton_clicked()
     }
 }
 
-void MainWindow::createMenuForButton(QPushButton *button, const std::initializer_list<QString>& initList, void(MainWindow::*mainWindowSlot)())
+void MainWindow::createMenuForButton(QPushButton *button,
+                                     const std::initializer_list<QString>& initList,
+                                     void(MainWindow::*mainWindowSlot)())
 {
     QMenu *buttonMenu = new QMenu;
     for(auto it = initList.begin(); it != initList.end(); it++)
@@ -90,6 +93,18 @@ void MainWindow::createMenuForButton(QPushButton *button, const std::initializer
         buttonMenu->addAction(*it, this, mainWindowSlot);
     }
     button->setMenu(buttonMenu);
+}
+
+void MainWindow::historySwitch(const QString& expression,
+                               record::type::RecordType type)
+{
+    ui->textEdit->setText(expression);
+    if(type == record::type::RecordType::EXPRESSION)
+    {
+        return;
+    }
+    (type == record::type::RecordType::PLOT2D) ? on_2DModeChanged() : on_3DModeChanged();
+    on_pushButton_graph_clicked();
 }
 
 
@@ -117,7 +132,10 @@ void MainWindow::on_pushButton_system_clicked()
         return;
     }
     bool ok;
-    QString text = QInputDialog::getText(this, tr("Enter number of system columns"), tr("Number of system columns:"), QLineEdit::Normal, "", &ok);
+    QString text = QInputDialog::getText(this,
+                                         tr("Enter number of system columns"),
+                                         tr("Number of system columns:"),
+                                         QLineEdit::Normal, "", &ok);
     if(!ok || text.isEmpty())
     {
         return;
@@ -218,6 +236,10 @@ void MainWindow::on_2DModeChanged()
             ui->stackedWidget_4->setCurrentIndex((int)PlotAreas::PLOT_AREA_2D);
         }
     }
+    if(!ui->action2D->isChecked())
+    {
+        ui->action2D->setChecked(true);
+    }
 }
 
 void MainWindow::on_3DModeChanged()
@@ -233,6 +255,10 @@ void MainWindow::on_3DModeChanged()
             ui->stackedWidget_4->setCurrentIndex((int)PlotAreas::PLOT_AREA_3D);
         }
     }
+    if(!ui->action3D->isChecked())
+    {
+        ui->action3D->setChecked(true);
+    }
 }
 
 
@@ -245,5 +271,12 @@ void MainWindow::on_generateSTLButton_clicked()
         userInput += ".stl";
     }
     ui->graphicArea3D->loadToSTL(userInput);
+}
+
+
+void MainWindow::on_historyButton_clicked()
+{
+    ui->historyWidget->update();
+    ui->stackedWidget_3->setCurrentIndex((int)CalculatorArea::HISTORY_AREA);
 }
 

@@ -161,36 +161,12 @@ bool PlotTable3D::existExpression(const QString& expression)
     return query.next();
 }
 
-bool PlotTable3D::removeByExpression(const Plot3D& plot3D)
+bool PlotTable3D::removeByExpression(const QString& expression)
 {
     QSqlQuery query;
     query.prepare("DELETE FROM plot3D WHERE expression = :expression ;");
-    query.bindValue(":expression", plot3D.expression);
+    query.bindValue(":expression", expression);
     query.exec();
     qDebug() << "REMOVE BY EXPRESSION: " << query.lastError().text();
     return query.next();
 }
-
-//CREATE TABLE IF NOT EXISTS Records (
-//    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,
-//    record_type_id INTEGER NOT NULL,
-//    related_record_id INTEGER NOT NULL,
-//    FOREIGN KEY (record_type_id) REFERENCES RecordTypes(id),
-//    FOREIGN KEY (related_record_id) REFERENCES ??? -- Здесь нужно указать, к какой из трех таблиц относится запись
-//);
-
-//CREATE TABLE IF NOT EXISTS RecordTypes (
-//    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,
-//    name TEXT NOT NULL
-//    );
-
-//CREATE TRIGGER IF NOT EXISTS DeleteRelatedRecord
-//    AFTER DELETE ON Records
-//        FOR EACH ROW
-//            BEGIN
-//                DELETE FROM
-//                    CalculationHistory -- Здесь нужно указать имя таблицы, связанной с CalculationHistory
-//    WHERE id = OLD.related_record_id;
-//-- Аналогично для Plot2D и Plot3D
-//    END;
-

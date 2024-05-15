@@ -25,9 +25,9 @@ class PlotTable2D: public AbstractTable
 {
 public:
     bool create() override;
+    bool removeByExpression(const QString&) override;
     bool insert(const Plot2D&);
     bool update(const Plot2D&);
-    bool remove(const Plot2D&);
     Plot2D selectByExpression(const QString&);
 
     bool existExpression(const QString&);

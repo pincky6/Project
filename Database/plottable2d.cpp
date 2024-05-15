@@ -150,11 +150,11 @@ bool PlotTable2D::existExpression(const QString& expression)
     return query.next();
 }
 
-bool PlotTable2D::remove(const Plot2D& plot2D)
+bool PlotTable2D::removeByExpression(const QString& expression)
 {
     QSqlQuery query;
     query.prepare("DELETE FROM plot2D WHERE expression = :expression ;");
-    query.bindValue(":expression", plot2D.expression);
+    query.bindValue(":expression", expression);
     query.exec();
     qDebug() << "REMOVE BY EXPRESSION: " << query.lastError().text();
     return query.next();

@@ -40,7 +40,10 @@ SOURCES += \
     Calculator/operands/Num.cpp \
     Calculator/operands/Vector.cpp \
     Calculator/operands/operands.cpp \
-    Calculator/recursivedescent.cpp
+    Calculator/recursivedescent.cpp \
+    History/historywidgetitem.cpp \
+    History/historywidget.cpp
+
 
 HEADERS += \
     "Marching Squares"/edge.h \
@@ -49,7 +52,9 @@ HEADERS += \
     Database/plottable2d.h \
     Database/plottable3d.h \
     Database/recordtable.h \
+    Database/recordtype.h \
     Database/serializablecontainers.h \
+    Database/tablefactory.h \
     Database/typetable.h \
     Plot/iplotbuilder.h \
     Plot/plotarea2d.h \
@@ -71,10 +76,13 @@ HEADERS += \
     Plot/plotarea3d.h\
     "System Widget"/systemwidget.h\
     Calculator/operands.h \
-    Calculator/recursivedescent.h
+    Calculator/recursivedescent.h \
+    History/historywidgetitem.h \
+    History/historywidget.h
 FORMS += \
     mainwindow.ui \
-    systemwidget.ui
+    systemwidget.ui \
+    historywidget.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

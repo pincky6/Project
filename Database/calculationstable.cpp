@@ -63,7 +63,7 @@ bool CalculationsTable::update(const CalculationResult& calculationResult)
     return query.exec();
 }
 
-bool CalculationsTable::remove(const QString& expression)
+bool CalculationsTable::removeByExpression(const QString& expression)
 {
     QSqlQuery query;
     query.prepare("DELETE FROM calculationsHistory WHERE expression = :expression ;");

@@ -8,6 +8,7 @@ class AbstractTable
 {
 public:
     virtual bool create() = 0;
+    virtual bool removeByExpression(const QString&) = 0;
     int getIndex()
     {
         QSqlQuery indexQuery("SELECT seq FROM sqlite_sequence WHERE name = \"records\";");

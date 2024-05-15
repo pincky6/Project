@@ -31,6 +31,16 @@ bool TypeTable::create()
     return check;
 }
 
+bool TypeTable::removeByExpression(const QString& type)
+{
+    QSqlQuery query;
+    query.prepare("DELETE FROM tableTypes WHERE type = :type;");
+    query.bindValue(":type", type);
+    query.exec();
+    qDebug() << "REMOVE BY EXPRESSION: " << query.lastError().text();
+    return query.next();
+}
+
 bool TypeTable::insert(const QString& type)
 {
     QSqlQuery query;

@@ -10,6 +10,7 @@ class TypeTable : public AbstractTable
 public:
     TypeTable();
     bool create() override;
+    bool removeByExpression(const QString&) override;
     bool insert(const QString&);
     bool existExpression(const QString&);
 };

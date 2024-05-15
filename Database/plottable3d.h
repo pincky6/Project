@@ -42,10 +42,10 @@ class PlotTable3D: public AbstractTable
 {
 public:
     bool create() override;
+    bool removeByExpression(const QString& expression) override;
     bool insert(const Plot3D&);
     bool update(const Plot3D&);
     Plot3D selectByExpression(const QString&);
-    bool removeByExpression(const Plot3D&);
 
     bool existExpression(const QString&);
 };

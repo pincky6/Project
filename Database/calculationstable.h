@@ -18,9 +18,9 @@ class CalculationsTable: public AbstractTable
 {
 public:
     bool create() override;
+    bool removeByExpression(const QString&) override;
     bool insert(const CalculationResult&);
     bool update(const CalculationResult&);
-    bool remove(const QString&);
     bool existExpression(const QString&);
 };
 

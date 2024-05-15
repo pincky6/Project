@@ -3,6 +3,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "Database/recordtype.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -17,7 +18,8 @@ class MainWindow : public QMainWindow
     enum class CalculatorArea
     {
         CALCULATOR_AREA = 0,
-        PLOT_AREA
+        PLOT_AREA,
+        HISTORY_AREA
     };
     enum class KeyBoardArea
     {
@@ -63,8 +65,13 @@ private slots:
 
     void on_generateSTLButton_clicked();
 
+    void on_historyButton_clicked();
+
 private:
     void createMenuForButton(QPushButton*, const std::initializer_list<QString>&, void(MainWindow::*)());
+
+public slots:
+    void historySwitch(const QString&, record::type::RecordType);
 private:
     Ui::MainWindow *ui;
 };
