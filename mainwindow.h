@@ -22,7 +22,8 @@ class MainWindow : public QMainWindow
     {
         CALCULATOR_AREA = 0,
         PLOT_AREA,
-        HISTORY_AREA
+        HISTORY_AREA,
+        SETTINGS_AREA
     };
     enum class KeyBoardArea
     {
@@ -62,11 +63,12 @@ private slots:
 
     void on_pushButton_clicked();
 
-    void on_backButton_clicked();
+    void on_backPlotButton_clicked();
 
     void on_2DModeChanged();
     void on_3DModeChanged();
-
+    void on_settingsAction_changed();
+    void on_backSettingsButton_clicked();
 
     void on_generateSTLButton_clicked();
 

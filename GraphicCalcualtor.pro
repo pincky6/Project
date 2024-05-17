@@ -27,6 +27,7 @@ SOURCES += \
     PlotBuilderWorkers/stlmodelscheduler.cpp \
     PlotBuilderWorkers/xyzplotbuilder.cpp \
     PlotBuilderWorkers/xyzplotcalculator.cpp \
+    Settings/settingswidget.cpp \
     main.cpp \
     mainwindow.cpp \
     "Marching Squares"/marchingsquares.cpp \
@@ -67,6 +68,7 @@ HEADERS += \
     PlotBuilderWorkers/stlmodelscheduler.h \
     PlotBuilderWorkers/xyzplotbuilder.h \
     PlotBuilderWorkers/xyzplotcalculator.h \
+    Settings/settingswidget.h \
     mainwindow.h \
     "Marching Squares"/marchingsquares.h \
     "Marching Squares"/node.h \
@@ -80,8 +82,11 @@ HEADERS += \
     Calculator/operands.h \
     Calculator/recursivedescent.h \
     History/historywidgetitem.h \
-    History/historywidget.h
+    History/historywidget.h \
+    Settings/settingsmodel.h
+
 FORMS += \
+    Settings/settingswidget.ui \
     mainwindow.ui \
     systemwidget.ui \
     historywidget.ui

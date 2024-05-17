@@ -232,20 +232,6 @@ void MainWindow::on_pushButton_equal_clicked()
 void MainWindow::on_pushButton_graph_clicked()
 {
     changeAreas();
-//    std::vector<QString> expressionsVector;
-//    expressionsVector.push_back(ui->textEdit->toPlainText());
-
-//    if(ui->action2D->isChecked())
-//    {
-//        ui->stackedWidget_4->setCurrentIndex((int)PlotAreas::PLOT_AREA_2D);
-//        ui->graphicArea->setExpressions(expressionsVector);
-//    }
-//    else
-//    {
-//        ui->stackedWidget_4->setCurrentIndex((int)PlotAreas::PLOT_AREA_3D);
-//        ui->graphicArea3D->setExpressions(expressionsVector);
-//    }
-//    ui->stackedWidget_3->setCurrentIndex((int)CalculatorArea::PLOT_AREA);
 }
 
 
@@ -255,7 +241,7 @@ void MainWindow::on_pushButton_clicked()
 }
 
 
-void MainWindow::on_backButton_clicked()
+void MainWindow::on_backPlotButton_clicked()
 {
     ui->stackedWidget_3->setCurrentIndex((int)CalculatorArea::CALCULATOR_AREA);
     if(ui->stackedWidget_4->currentIndex() == (int)PlotAreas::PLOT_AREA_3D)
@@ -268,44 +254,22 @@ void MainWindow::on_backButton_clicked()
 void MainWindow::on_2DModeChanged()
 {
     plotModeChanged(ui->action2D, ui->action3D, ui->graphicArea, PlotAreas::PLOT_AREA_2D);
-//    std::vector<QString> expressionsVector;
-//    expressionsVector.push_back(ui->textEdit->toPlainText());
-//    if(ui->action2D->isChecked())
-//    {
-//        ui->action3D->setChecked(false);
-
-//        if(ui->stackedWidget_3->currentIndex() != (int)CalculatorArea::CALCULATOR_AREA)
-//        {
-//            ui->graphicArea->setExpressions(expressionsVector);
-//            ui->stackedWidget_4->setCurrentIndex((int)PlotAreas::PLOT_AREA_2D);
-//        }
-//    }
-//    if(!ui->action2D->isChecked())
-//    {
-//        ui->action2D->setChecked(true);
-//    }
 }
 
 void MainWindow::on_3DModeChanged()
 {
     plotModeChanged(ui->action3D, ui->action2D, ui->graphicArea3D, PlotAreas::PLOT_AREA_3D);
-//    std::vector<QString> expressionsVector;
-//    expressionsVector.push_back(ui->textEdit->toPlainText());
-//    if(ui->action3D->isChecked())
-//    {
-//        ui->action2D->setChecked(false);
-//        if(ui->stackedWidget_3->currentIndex() != (int)CalculatorArea::CALCULATOR_AREA)
-//        {
-//            ui->graphicArea3D->setExpressions(expressionsVector);
-//            ui->stackedWidget_4->setCurrentIndex((int)PlotAreas::PLOT_AREA_3D);
-//        }
-//    }
-//    if(!ui->action3D->isChecked())
-//    {
-//        ui->action3D->setChecked(true);
-//    }
 }
 
+void MainWindow::on_settingsAction_changed()
+{
+    ui->stackedWidget_3->setCurrentIndex((int)CalculatorArea::SETTINGS_AREA);
+}
+
+void MainWindow::on_backSettingsButton_clicked()
+{
+    ui->stackedWidget_3->setCurrentIndex((int)CalculatorArea::CALCULATOR_AREA);
+}
 
 void MainWindow::on_generateSTLButton_clicked()
 {

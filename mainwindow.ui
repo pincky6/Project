@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>446</width>
-    <height>576</height>
+    <width>485</width>
+    <height>577</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,7 +18,7 @@
     <item>
      <widget class="QStackedWidget" name="stackedWidget_3">
       <property name="currentIndex">
-       <number>0</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="page_3">
        <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -1040,7 +1040,7 @@
         <item>
          <widget class="QStackedWidget" name="stackedWidget_4">
           <property name="currentIndex">
-           <number>1</number>
+           <number>0</number>
           </property>
           <widget class="QWidget" name="page_5">
            <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -1092,6 +1092,13 @@
         </item>
        </layout>
       </widget>
+      <widget class="QWidget" name="page_10">
+       <layout class="QVBoxLayout" name="verticalLayout_10">
+        <item>
+         <widget class="SettingsWidget" name="settingsWidget" native="true"/>
+        </item>
+       </layout>
+      </widget>
      </widget>
     </item>
    </layout>
@@ -1101,7 +1108,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>446</width>
+     <width>485</width>
      <height>21</height>
     </rect>
    </property>
@@ -1111,6 +1118,8 @@
     </property>
     <addaction name="action2D"/>
     <addaction name="action3D"/>
+    <addaction name="separator"/>
+    <addaction name="actionSettings"/>
    </widget>
    <addaction name="menu3d_mode"/>
   </widget>
@@ -1128,7 +1137,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>2D режим</string>
+    <string>2D mode</string>
    </property>
   </action>
   <action name="action3D">
@@ -1137,6 +1146,11 @@
    </property>
    <property name="text">
     <string>3D mode</string>
+   </property>
+  </action>
+  <action name="actionSettings">
+   <property name="text">
+    <string>Settings</string>
    </property>
   </action>
  </widget>
@@ -1162,6 +1176,12 @@
    <class>HistoryWidget</class>
    <extends>QWidget</extends>
    <header location="global">History/historywidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>SettingsWidget</class>
+   <extends>QWidget</extends>
+   <header>Settings/settingswidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
@@ -1619,7 +1639,7 @@
    <sender>backButton</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
-   <slot>on_backButton_clicked()</slot>
+   <slot>on_backPlotButton_clicked()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>222</x>
@@ -1663,12 +1683,29 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionSettings</sender>
+   <signal>changed()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>on_settingsAction_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>242</x>
+     <y>288</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>buttonClicked()</slot>
   <slot>functionButtonClicked()</slot>
   <slot>on_2DModeChanged()</slot>
   <slot>on_3DModeChanged()</slot>
-  <slot>on_backButton_clicked()</slot>
+  <slot>on_backPlotButton_clicked()</slot>
+  <slot>on_settingsAction_changed()</slot>
  </slots>
 </ui>

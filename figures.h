@@ -1,5 +1,5 @@
-#ifndef CUBE_H
-#define CUBE_H
+#ifndef FIGURES_H
+#define FIGURES_H
 
 #include <vector>
 
