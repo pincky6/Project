@@ -26,11 +26,11 @@ QString record::type::toStringRepresentation(RecordType type)
     switch(type)
     {
     case record::type::RecordType::EXPRESSION:
-        return "EXPRESSION";
+        return "Expression";
     case record::type::RecordType::PLOT2D:
-        return "PLOT2D";
+        return "Plot 2D";
     case record::type::RecordType::PLOT3D:
-        return "PLOT3D";
+        return "Plot 3D";
     default:
         return "";
     }
@@ -38,11 +38,11 @@ QString record::type::toStringRepresentation(RecordType type)
 
 record::type::RecordType record::type::fromStringRepresentation(const QString& typeString)
 {
-    if(typeString == "EXPRESSION")
+    if(typeString == "Expression")
     {
         return RecordType::EXPRESSION;
     }
-    else if(typeString == "PLOT2D")
+    else if(typeString == "Plot 2D")
     {
         return RecordType::PLOT2D;
     }

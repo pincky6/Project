@@ -22,6 +22,7 @@ class HistoryWidget : public QWidget
 public:
     HistoryWidget(QWidget *parent = nullptr);
     void keyPressEvent(QKeyEvent *event);
+    void deleteAllItems();
     void update();
     ~HistoryWidget();
 public slots:
@@ -31,7 +32,7 @@ private slots:
     void on_selectAllButton_clicked();
     void itemDoubleClicked(QListWidgetItem*);
 signals:
-    void doubleClicked(const QString&, record::type::RecordType);
+    void doubleClicked(QString, record::type::RecordType);
 private:
     void makeItem(const Record&, QListWidget* lstWgt );
 private:

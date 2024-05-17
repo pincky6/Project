@@ -3,15 +3,16 @@
 
 #include <QWidget>
 #include "iplotbuilder.h"
+#include "abstractplotarea.h"
 
-class PlotArea2D: public QWidget
+class PlotArea2D: public QWidget, public AbstractPlotArea
 {
     Q_OBJECT
 
 public:
     PlotArea2D(QWidget *parent = nullptr);
-    void paintEvent(QPaintEvent*);
-    void setExpressions(const std::vector<QString>&);
+    void paintEvent(QPaintEvent*) override;
+    void setExpressions(const std::vector<QString>&) override;
     ~PlotArea2D();
 
 private:

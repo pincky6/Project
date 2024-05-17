@@ -19,6 +19,10 @@ public:
 
     QString& getExpression();
     const QString& getExpression() const;
+private:
+    void setLabel(QLabel*, const QString&, QLayout*);
+    void setSeparator(QLayout*);
+    void setRemoveButton(QLayout*);
 public slots:
     void itemClicked();
 signals:
@@ -26,7 +30,7 @@ signals:
 private:
     QPushButton* removeButton;
     QLabel* textLabel;
-
+    QLabel* typeTextLabel;
     Record record;
 };
 

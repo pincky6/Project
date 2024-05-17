@@ -29,6 +29,46 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::plotModeChanged(QAction* activeAction,
+                                 QAction* disableAction,
+                                 AbstractPlotArea* plotArea,
+                                 PlotAreas plotAreaEnum)
+{
+    std::vector<QString> expressionsVector;
+    expressionsVector.push_back(ui->textEdit->toPlainText());
+    if(!activeAction->isChecked() && !disableAction->isChecked())
+    {
+        activeAction->setChecked(true);
+    }
+    if(activeAction->isChecked())
+    {
+        disableAction->setChecked(false);
+        if(ui->stackedWidget_3->currentIndex() != (int)CalculatorArea::CALCULATOR_AREA)
+        {
+            plotArea->setExpressions(expressionsVector);
+            ui->stackedWidget_4->setCurrentIndex((int)plotAreaEnum);
+        }
+    }
+}
+
+void MainWindow::changeAreas()
+{
+    std::vector<QString> expressionsVector;
+    expressionsVector.push_back(ui->textEdit->toPlainText());
+
+    if(ui->action2D->isChecked())
+    {
+        ui->stackedWidget_4->setCurrentIndex((int)PlotAreas::PLOT_AREA_2D);
+        ui->graphicArea->setExpressions(expressionsVector);
+    }
+    else
+    {
+        ui->stackedWidget_4->setCurrentIndex((int)PlotAreas::PLOT_AREA_3D);
+        ui->graphicArea3D->setExpressions(expressionsVector);
+    }
+    ui->stackedWidget_3->setCurrentIndex((int)CalculatorArea::PLOT_AREA);
+}
+
 void MainWindow::buttonClicked()
 {
     if(ui->stackedWidget_2->currentIndex() == 0)
@@ -95,7 +135,7 @@ void MainWindow::createMenuForButton(QPushButton *button,
     button->setMenu(buttonMenu);
 }
 
-void MainWindow::historySwitch(const QString& expression,
+void MainWindow::historySwitch(QString expression,
                                record::type::RecordType type)
 {
     ui->textEdit->setText(expression);
@@ -103,8 +143,10 @@ void MainWindow::historySwitch(const QString& expression,
     {
         return;
     }
-    (type == record::type::RecordType::PLOT2D) ? on_2DModeChanged() : on_3DModeChanged();
-    on_pushButton_graph_clicked();
+    (type == record::type::RecordType::PLOT2D) ?
+        ui->action2D->setChecked(true) :
+        ui->action3D->setChecked(true);
+    changeAreas();
 }
 
 
@@ -189,20 +231,21 @@ void MainWindow::on_pushButton_equal_clicked()
 
 void MainWindow::on_pushButton_graph_clicked()
 {
-    std::vector<QString> expressionsVector;
-    expressionsVector.push_back(ui->textEdit->toPlainText());
+    changeAreas();
+//    std::vector<QString> expressionsVector;
+//    expressionsVector.push_back(ui->textEdit->toPlainText());
 
-    if(ui->action2D->isChecked())
-    {
-        ui->stackedWidget_4->setCurrentIndex((int)PlotAreas::PLOT_AREA_2D);
-        ui->graphicArea->setExpressions(expressionsVector);
-    }
-    else
-    {
-        ui->stackedWidget_4->setCurrentIndex((int)PlotAreas::PLOT_AREA_3D);
-        ui->graphicArea3D->setExpressions(expressionsVector);
-    }
-    ui->stackedWidget_3->setCurrentIndex((int)CalculatorArea::PLOT_AREA);
+//    if(ui->action2D->isChecked())
+//    {
+//        ui->stackedWidget_4->setCurrentIndex((int)PlotAreas::PLOT_AREA_2D);
+//        ui->graphicArea->setExpressions(expressionsVector);
+//    }
+//    else
+//    {
+//        ui->stackedWidget_4->setCurrentIndex((int)PlotAreas::PLOT_AREA_3D);
+//        ui->graphicArea3D->setExpressions(expressionsVector);
+//    }
+//    ui->stackedWidget_3->setCurrentIndex((int)CalculatorArea::PLOT_AREA);
 }
 
 
@@ -224,41 +267,43 @@ void MainWindow::on_backButton_clicked()
 
 void MainWindow::on_2DModeChanged()
 {
-    std::vector<QString> expressionsVector;
-    expressionsVector.push_back(ui->textEdit->toPlainText());
-    if(ui->action2D->isChecked())
-    {
-        ui->action3D->setChecked(false);
+    plotModeChanged(ui->action2D, ui->action3D, ui->graphicArea, PlotAreas::PLOT_AREA_2D);
+//    std::vector<QString> expressionsVector;
+//    expressionsVector.push_back(ui->textEdit->toPlainText());
+//    if(ui->action2D->isChecked())
+//    {
+//        ui->action3D->setChecked(false);
 
-        if(ui->stackedWidget_3->currentIndex() != (int)CalculatorArea::CALCULATOR_AREA)
-        {
-            ui->graphicArea->setExpressions(expressionsVector);
-            ui->stackedWidget_4->setCurrentIndex((int)PlotAreas::PLOT_AREA_2D);
-        }
-    }
-    if(!ui->action2D->isChecked())
-    {
-        ui->action2D->setChecked(true);
-    }
+//        if(ui->stackedWidget_3->currentIndex() != (int)CalculatorArea::CALCULATOR_AREA)
+//        {
+//            ui->graphicArea->setExpressions(expressionsVector);
+//            ui->stackedWidget_4->setCurrentIndex((int)PlotAreas::PLOT_AREA_2D);
+//        }
+//    }
+//    if(!ui->action2D->isChecked())
+//    {
+//        ui->action2D->setChecked(true);
+//    }
 }
 
 void MainWindow::on_3DModeChanged()
 {
-    std::vector<QString> expressionsVector;
-    expressionsVector.push_back(ui->textEdit->toPlainText());
-    if(ui->action3D->isChecked())
-    {
-        ui->action2D->setChecked(false);
-        if(ui->stackedWidget_3->currentIndex() != (int)CalculatorArea::CALCULATOR_AREA)
-        {
-            ui->graphicArea3D->setExpressions(expressionsVector);
-            ui->stackedWidget_4->setCurrentIndex((int)PlotAreas::PLOT_AREA_3D);
-        }
-    }
-    if(!ui->action3D->isChecked())
-    {
-        ui->action3D->setChecked(true);
-    }
+    plotModeChanged(ui->action3D, ui->action2D, ui->graphicArea3D, PlotAreas::PLOT_AREA_3D);
+//    std::vector<QString> expressionsVector;
+//    expressionsVector.push_back(ui->textEdit->toPlainText());
+//    if(ui->action3D->isChecked())
+//    {
+//        ui->action2D->setChecked(false);
+//        if(ui->stackedWidget_3->currentIndex() != (int)CalculatorArea::CALCULATOR_AREA)
+//        {
+//            ui->graphicArea3D->setExpressions(expressionsVector);
+//            ui->stackedWidget_4->setCurrentIndex((int)PlotAreas::PLOT_AREA_3D);
+//        }
+//    }
+//    if(!ui->action3D->isChecked())
+//    {
+//        ui->action3D->setChecked(true);
+//    }
 }
 
 

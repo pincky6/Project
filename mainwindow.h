@@ -10,6 +10,9 @@ namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
 class QPushButton;
+class QAction;
+class AbstractPlotArea;
+
 
 class MainWindow : public QMainWindow
 {
@@ -36,7 +39,9 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-
+private:
+    void plotModeChanged(QAction*, QAction*, AbstractPlotArea*, PlotAreas);
+    void changeAreas();
 private slots:
     void buttonClicked();
     void menuButtonClicked();
@@ -71,7 +76,7 @@ private:
     void createMenuForButton(QPushButton*, const std::initializer_list<QString>&, void(MainWindow::*)());
 
 public slots:
-    void historySwitch(const QString&, record::type::RecordType);
+    void historySwitch(QString, record::type::RecordType);
 private:
     Ui::MainWindow *ui;
 };

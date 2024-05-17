@@ -37,6 +37,11 @@ void HistoryWidget::keyPressEvent(QKeyEvent *event)
     }
 }
 
+void HistoryWidget::deleteAllItems()
+{
+    ui->listWidget->clear();
+}
+
 void HistoryWidget::update()
 {
     RecordTable recordTable;
@@ -68,7 +73,9 @@ void HistoryWidget::on_selectAllButton_clicked()
 void HistoryWidget::itemDoubleClicked(QListWidgetItem* item)
 {
     HistoryWidgetItem* historyItem = dynamic_cast<HistoryWidgetItem*>(item);
-    emit doubleClicked(historyItem->getExpression(),
-                  historyItem->getType());
+    QString expression = historyItem->getExpression();
+    record::type::RecordType record = historyItem->getType();
+    deleteAllItems();
+    emit doubleClicked(expression, record);
 }
 

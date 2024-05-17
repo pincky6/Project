@@ -104,8 +104,10 @@ bool PlotTable2D::insert(const Plot2D& plot2D)
                   " :vertices,"
                   " :recordId"
                   ");");
+    QByteArray array = plot2D.serializeEdgeList();
+    if(array.isEmpty()) return false;
     query.bindValue(":expression", plot2D.expression);
-    query.bindValue(":vertices", plot2D.serializeEdgeList());
+    query.bindValue(":vertices", array);
     query.bindValue(":recordId", index);
     bool check = query.exec();
     qDebug() << "INSERT PLOT2D: " << query.lastError().text();

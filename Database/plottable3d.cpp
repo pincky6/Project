@@ -108,9 +108,13 @@ bool PlotTable3D::insert(const Plot3D& plot3D)
                   " :maxScaleFactor,"
                   " :recordId"
                   ");");
+    QByteArray arrayVertices = plot3D.serializeVertices();
+    QByteArray arrayIndices = plot3D.serializeIndices();
+    if(arrayVertices.isEmpty() || arrayIndices.isEmpty()) return false;
+
     query.bindValue(":expression", plot3D.expression);
-    query.bindValue(":vertices", plot3D.serializeVertices());
-    query.bindValue(":indices", plot3D.serializeIndices());
+    query.bindValue(":vertices", arrayVertices);
+    query.bindValue(":indices", arrayIndices);
     query.bindValue(":maxScaleFactor", plot3D.maxScaleFactor);
     query.bindValue(":recordId", index);
     bool check = query.exec();

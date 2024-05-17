@@ -11,15 +11,18 @@
 
 #include "PlotBuilderWorkers/plotscheduler.h"
 #include "PlotBuilderWorkers/stlmodelscheduler.h"
+
+#include "abstractplotarea.h"
+
 #include <QMatrix4x4>
 
-class PlotArea3D final: public QOpenGLWidget, public QOpenGLFunctions
+class PlotArea3D final: public QOpenGLWidget, public QOpenGLFunctions, public AbstractPlotArea
 {
     Q_OBJECT
 
 public:
     PlotArea3D(QWidget *parent = 0);
-    void setExpressions(const std::vector<QString>&);
+    void setExpressions(const std::vector<QString>&) override;
     void resetPlot(std::shared_ptr<std::vector<Vertex>>,
                    std::shared_ptr<std::vector<unsigned int>>);
     void destroyPlotBuffer();

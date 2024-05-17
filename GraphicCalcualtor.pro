@@ -17,6 +17,7 @@ SOURCES += \
     Database/plottable3d.cpp \
     Database/recordtable.cpp \
     Database/typetable.cpp \
+    Plot/abstractplotarea.cpp \
     Plot/iplotbuilder.cpp \
     Plot/plotarea2d.cpp \
     PlotBuilderWorkers/abstractplotworker.cpp \
@@ -56,6 +57,7 @@ HEADERS += \
     Database/serializablecontainers.h \
     Database/tablefactory.h \
     Database/typetable.h \
+    Plot/abstractplotarea.h \
     Plot/iplotbuilder.h \
     Plot/plotarea2d.h \
     PlotBuilderWorkers/abstractplotworker.h \
