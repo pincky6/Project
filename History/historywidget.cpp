@@ -79,3 +79,8 @@ void HistoryWidget::itemDoubleClicked(QListWidgetItem* item)
     emit doubleClicked(expression, record);
 }
 
+void HistoryWidget::on_backButton_clicked()
+{
+    emit backButtonClicked();
+}
+

@@ -31,8 +31,11 @@ public slots:
 private slots:
     void on_selectAllButton_clicked();
     void itemDoubleClicked(QListWidgetItem*);
+    void on_backButton_clicked();
+
 signals:
     void doubleClicked(QString, record::type::RecordType);
+    void backButtonClicked();
 private:
     void makeItem(const Record&, QListWidget* lstWgt );
 private:

@@ -174,3 +174,8 @@ bool PlotTable3D::removeByExpression(const QString& expression)
     qDebug() << "REMOVE BY EXPRESSION: " << query.lastError().text();
     return query.next();
 }
+
+bool PlotTable3D::insertOrUpdate(const Plot3D &)
+{
+
+}

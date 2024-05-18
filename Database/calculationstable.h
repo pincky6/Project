@@ -21,6 +21,7 @@ public:
     bool removeByExpression(const QString&) override;
     bool insert(const CalculationResult&);
     bool update(const CalculationResult&);
+    bool insertOrUpdate(const CalculationResult&);
     bool existExpression(const QString&);
 };
 

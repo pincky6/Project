@@ -12,3 +12,9 @@ SettingsWidget::~SettingsWidget()
 {
     delete ui;
 }
+
+void SettingsWidget::on_backButton_clicked()
+{
+    emit backButtonClicked();
+}
+

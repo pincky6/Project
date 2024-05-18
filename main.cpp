@@ -9,6 +9,7 @@
 #include "Database/plottable3d.h"
 #include "Database/typetable.h"
 #include "Database/recordtable.h"
+#include "Database/settingstable.h"
 
 int main(int argc, char *argv[])
 {
@@ -25,6 +26,7 @@ int main(int argc, char *argv[])
     TypeTable typeTable;
     CalculationsTable calculationsTable;
     RecordTable recordTable;
+    SettingsTable settingsTable;
     if(!typeTable.create())
     {
         qDebug() << "Table type didn't created";
@@ -44,6 +46,10 @@ int main(int argc, char *argv[])
     if(!calculationsTable.create())
     {
         qDebug() << "Table calculations history didn't created";
+    }
+    if(!settingsTable.create())
+    {
+        qDebug() << "Table settings didn't created";
     }
     MainWindow w;
     w.show();

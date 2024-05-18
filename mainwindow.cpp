@@ -5,6 +5,8 @@
 
 #include "Calculator/recursivedescent.h"
 
+#include "Database/recordtable.h"
+
 #include <QInputDialog>
 #include <QMessageBox>
 #include <QFile>
@@ -16,12 +18,18 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     QObject::connect(ui->historyWidget, &HistoryWidget::doubleClicked, this, &MainWindow::historySwitch);
+    QObject::connect(ui->historyWidget, &HistoryWidget::backButtonClicked, this, &MainWindow::on_backButtonClicked);
+
+    QObject::connect(ui->settingsWidget, &SettingsWidget::backButtonClicked, this, &MainWindow::on_backButtonClicked);
+
     createMenuForButton(ui->pushButton_sinFunctions, {"sin", "asin", "sinh", "asinh"}, &MainWindow::functionButtonMenuClicked);
     createMenuForButton(ui->pushButton_cosFunctions, {"cos", "acos", "cosh", "acosh"}, &MainWindow::functionButtonMenuClicked);
     createMenuForButton(ui->pushButton_tanFunctions, {"tan", "atan", "tanh", "atanh"},  &MainWindow::functionButtonMenuClicked);
     createMenuForButton(ui->pushButton_cotFunctions, {"cot", "acot", "coth", "acoth"},  &MainWindow::functionButtonMenuClicked);
     createMenuForButton(ui->pushButton_logFunctions, {"log", "ln", "lg"},  &MainWindow::functionButtonMenuClicked);
     createMenuForButton(ui->pushButton_var, {"x", "y", "z"},  &MainWindow::menuButtonClicked);
+
+    uploadToHistoryLabel();
 }
 
 MainWindow::~MainWindow()
@@ -49,6 +57,17 @@ void MainWindow::plotModeChanged(QAction* activeAction,
             ui->stackedWidget_4->setCurrentIndex((int)plotAreaEnum);
         }
     }
+}
+
+void MainWindow::uploadToHistoryLabel()
+{
+    RecordTable recordTable;
+    auto records = recordTable.selectAll();
+    QString text;
+    for(auto&& record: records){
+        text += record.expression + "\n";
+    }
+    ui->label->setText(text);
 }
 
 void MainWindow::changeAreas()
@@ -221,6 +240,7 @@ void MainWindow::on_pushButton_equal_clicked()
         {
             table.insert(calculationResult);
         }
+        uploadToHistoryLabel();
     }
     catch(const std::exception& exception)
     {
@@ -241,7 +261,7 @@ void MainWindow::on_pushButton_clicked()
 }
 
 
-void MainWindow::on_backPlotButton_clicked()
+void MainWindow::on_backPlotButtonClicked()
 {
     ui->stackedWidget_3->setCurrentIndex((int)CalculatorArea::CALCULATOR_AREA);
     if(ui->stackedWidget_4->currentIndex() == (int)PlotAreas::PLOT_AREA_3D)
@@ -249,6 +269,7 @@ void MainWindow::on_backPlotButton_clicked()
         ui->graphicArea3D->destroyPlotBuffer();
         ui->graphicArea3D->freeSchedulers();
     }
+    uploadToHistoryLabel();
 }
 
 void MainWindow::on_2DModeChanged()
@@ -261,12 +282,12 @@ void MainWindow::on_3DModeChanged()
     plotModeChanged(ui->action3D, ui->action2D, ui->graphicArea3D, PlotAreas::PLOT_AREA_3D);
 }
 
-void MainWindow::on_settingsAction_changed()
+void MainWindow::on_settingsActionClicked()
 {
     ui->stackedWidget_3->setCurrentIndex((int)CalculatorArea::SETTINGS_AREA);
 }
 
-void MainWindow::on_backSettingsButton_clicked()
+void MainWindow::on_backButtonClicked()
 {
     ui->stackedWidget_3->setCurrentIndex((int)CalculatorArea::CALCULATOR_AREA);
 }
@@ -288,4 +309,3 @@ void MainWindow::on_historyButton_clicked()
     ui->historyWidget->update();
     ui->stackedWidget_3->setCurrentIndex((int)CalculatorArea::HISTORY_AREA);
 }
-

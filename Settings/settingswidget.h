@@ -14,6 +14,10 @@ class SettingsWidget : public QWidget
 public:
     explicit SettingsWidget(QWidget *parent = nullptr);
     ~SettingsWidget();
+signals:
+    void backButtonClicked();
+public slots:
+    void on_backButton_clicked();
 
 private:
     Ui::SettingsWidget *ui;

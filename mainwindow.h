@@ -39,9 +39,11 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow(QWidget *parent = nullptr);
+
     ~MainWindow();
 private:
     void plotModeChanged(QAction*, QAction*, AbstractPlotArea*, PlotAreas);
+    void uploadToHistoryLabel();
     void changeAreas();
 private slots:
     void buttonClicked();
@@ -63,12 +65,12 @@ private slots:
 
     void on_pushButton_clicked();
 
-    void on_backPlotButton_clicked();
+    void on_backPlotButtonClicked();
 
     void on_2DModeChanged();
     void on_3DModeChanged();
-    void on_settingsAction_changed();
-    void on_backSettingsButton_clicked();
+    void on_settingsActionClicked();
+    void on_backButtonClicked();
 
     void on_generateSTLButton_clicked();
 
@@ -76,7 +78,6 @@ private slots:
 
 private:
     void createMenuForButton(QPushButton*, const std::initializer_list<QString>&, void(MainWindow::*)());
-
 public slots:
     void historySwitch(QString, record::type::RecordType);
 private:
