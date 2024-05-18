@@ -235,7 +235,7 @@
         <item>
          <widget class="QStackedWidget" name="stackedWidget">
           <property name="currentIndex">
-           <number>1</number>
+           <number>0</number>
           </property>
           <widget class="QWidget" name="page">
            <layout class="QVBoxLayout" name="verticalLayout">
@@ -923,7 +923,7 @@
         <item>
          <widget class="QStackedWidget" name="stackedWidget_4">
           <property name="currentIndex">
-           <number>0</number>
+           <number>1</number>
           </property>
           <widget class="QWidget" name="page_5">
            <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -931,7 +931,7 @@
              <widget class="PlotArea2D" name="graphicArea" native="true"/>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton">
+             <widget class="QPushButton" name="backButtonPlot">
               <property name="text">
                <string>Return</string>
               </property>
@@ -954,7 +954,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="backButton">
+               <widget class="QPushButton" name="backButtonPlot3D">
                 <property name="text">
                  <string>Return</string>
                 </property>
@@ -1519,14 +1519,14 @@
    </hints>
   </connection>
   <connection>
-   <sender>backButton</sender>
+   <sender>backButtonPlot</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
    <slot>on_backPlotButtonClicked()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>222</x>
-     <y>513</y>
+     <y>535</y>
     </hint>
     <hint type="destinationlabel">
      <x>222</x>
@@ -1579,6 +1579,22 @@
     <hint type="destinationlabel">
      <x>242</x>
      <y>288</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>backButtonPlot3D</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>on_backPlotButtonClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>222</x>
+     <y>534</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>222</x>
+     <y>298</y>
     </hint>
    </hints>
   </connection>

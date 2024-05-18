@@ -1,7 +1,7 @@
 #include "plottable2d.h"
-#include <QThread>
 #include <QSqlQuery>
 #include <QSqlError>
+#include "Database/settingstable.h"
 
 Plot2D::Plot2D(const QString& expression_,
                const QByteArray& serializedVertices):
@@ -129,6 +129,23 @@ bool PlotTable2D::update(const Plot2D& plot2D)
     return query.exec();
 }
 
+bool PlotTable2D::updateLast(const Plot2D& plot2D)
+{
+    int maxId = getMaxId();
+    QSqlQuery query;
+    query.prepare("UPDATE plot2D SET"
+                  " vertices=:vertices"
+                  " WHERE expression=:expression AND id = :id;");
+
+    QByteArray verticesArray = plot2D.serializeEdgeList();
+
+    query.bindValue(":expression", plot2D.expression);
+    query.bindValue(":vertices", verticesArray);
+    query.bindValue(":id", maxId);
+
+    return query.exec();
+}
+
 Plot2D PlotTable2D::selectByExpression(const QString& selectExpression)
 {
     QSqlQuery query;
@@ -152,6 +169,22 @@ bool PlotTable2D::existExpression(const QString& expression)
     return query.next();
 }
 
+bool PlotTable2D::drop(unsigned int rowCount)
+{
+    return AbstractTable::drop("plot2D", rowCount);
+}
+
+int PlotTable2D::getRowCount()
+{
+    return AbstractTable::getRowCount("plot2D");
+}
+
+int PlotTable2D::getMaxId()
+{
+    return AbstractTable::getMaxId("plot2D");
+}
+
+
 bool PlotTable2D::removeByExpression(const QString& expression)
 {
     QSqlQuery query;
@@ -164,5 +197,10 @@ bool PlotTable2D::removeByExpression(const QString& expression)
 
 bool PlotTable2D::insertOrUpdate(const Plot2D& plot2D)
 {
-    return (existExpression(plot2D.expression) ? update(plot2D) : insert(plot2D));
+    SettingsTable table;
+    SettingsModel model = table.select();
+
+    return (existExpression(plot2D.expression) ? update(plot2D) :
+            (model.model2DRecordsCount <= getRowCount()) ? updateLast(plot2D) :
+            insert(plot2D));
 }

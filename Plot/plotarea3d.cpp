@@ -5,7 +5,7 @@
 
 #include "axis.h"
 #include "Database/plottable3d.h"
-
+#include "Database/settingstable.h"
 #include "figures.h"
 
 using namespace plot_builder;
@@ -56,6 +56,7 @@ void PlotArea3D::resetPlot(std::shared_ptr<std::vector<Vertex>> plotVertices,
     }
     if(plotVertices->size() == 0 ||
         plotIndices->size() == 0) return;
+    qDebug() << "dasd";
     destroyPlotBuffer();
     Plot3D plot3D(expressionsVector_[0], plotVertices,
                   plotIndices, maxScaleFactor_);
@@ -216,8 +217,10 @@ void PlotArea3D::freeSchedulers()
 
 void PlotArea3D::loadToSTL(const QString& filename)
 {
-    float length = defaultLength_ * scaleFactor_;
-    Cube field(Vertex(-length, -length, -length), length * 2, length * 2, length * 2);
+    SettingsTable table;
+    SettingsModel model = table.select();
+    Cube field(Vertex(-model.modelWidth, -model.modelLength, -model.modelHeight),
+               model.modelWidth * 2, model.modelLength * 2, model.modelHeight * 2);
     auto cubes = field.divide(1);
     if(cubes.size() == 0)
     {
@@ -228,7 +231,9 @@ void PlotArea3D::loadToSTL(const QString& filename)
     {
         builder->setFilename(filename);
         builder->setExpression(expressionsVector_[0]);
-        builder->setResolution({length * 10, length * 10, length * 10});
+        builder->setResolution({static_cast<float>(model.resolutionX),
+                                static_cast<float>(model.resolutionY),
+                                static_cast<float>(model.resolutionZ)});
         builder->setCube(cubes[0]);
         modelScheduler_.addTask(std::move(builder), this);
     }

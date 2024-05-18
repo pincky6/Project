@@ -20,6 +20,7 @@ public:
     RecordTable();
     bool create() override;
     bool removeByExpression(const QString&) override;
+    bool clearTable();
     QVector<Record> selectAll();
 };
 

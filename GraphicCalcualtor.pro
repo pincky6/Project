@@ -28,6 +28,7 @@ SOURCES += \
     PlotBuilderWorkers/stlmodelscheduler.cpp \
     PlotBuilderWorkers/xyzplotbuilder.cpp \
     PlotBuilderWorkers/xyzplotcalculator.cpp \
+    Settings/calculatorsettingsconfig.cpp \
     Settings/settingswidget.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -70,6 +71,7 @@ HEADERS += \
     PlotBuilderWorkers/stlmodelscheduler.h \
     PlotBuilderWorkers/xyzplotbuilder.h \
     PlotBuilderWorkers/xyzplotcalculator.h \
+    Settings/calculatorsettingsconfig.h \
     Settings/settingswidget.h \
     mainwindow.h \
     "Marching Squares"/marchingsquares.h \

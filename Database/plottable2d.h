@@ -30,8 +30,11 @@ public:
     bool update(const Plot2D&);
     bool insertOrUpdate(const Plot2D&);
     Plot2D selectByExpression(const QString&);
-
+    bool updateLast(const Plot2D&);
     bool existExpression(const QString&);
+    bool drop(unsigned int);
+    int getRowCount();
+    int getMaxId();
 };
 
 #endif // PLOTTABLE2D_H

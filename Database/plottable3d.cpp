@@ -1,5 +1,7 @@
 #include "Database/plottable3d.h"
 
+#include "Database/settingstable.h"
+
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QString>
@@ -140,6 +142,31 @@ bool PlotTable3D::update(const Plot3D& plot3D)
     return query.exec();
 }
 
+bool PlotTable3D::updateLast(const Plot3D& plot3D)
+{
+    int maxId = getMaxId();
+    QSqlQuery query;
+    query.prepare("UPDATE plot3D SET"
+                  " vertices=:vertices, indices=:indices, maxScaleFactor = :maxScaleFactor"
+                  " WHERE expression=:expression AND id = :id;");
+
+    QByteArray verticesArray = plot3D.serializeVertices();
+    QByteArray indicesArray = plot3D.serializeIndices();
+
+    query.bindValue(":expression", plot3D.expression);
+    query.bindValue(":vertices", verticesArray);
+    query.bindValue(":indices", indicesArray);
+    query.bindValue(":maxScaleFactor", plot3D.maxScaleFactor);
+    query.bindValue(":id", maxId);
+
+    return query.exec();
+}
+
+bool PlotTable3D::drop(unsigned int rowCount)
+{
+    return AbstractTable::drop("plot3D", rowCount);
+}
+
 Plot3D PlotTable3D::selectByExpression(const QString& selectExpression)
 {
     QSqlQuery query;
@@ -153,6 +180,16 @@ Plot3D PlotTable3D::selectByExpression(const QString& selectExpression)
     float maxScaleValue = query.value("maxScaleFactor").toFloat();
     qDebug() << "SELECT BY EXPRESSION: " << query.lastError().text();
     return Plot3D(expression, arrayVertices, arrayIndices, maxScaleValue);
+}
+
+int PlotTable3D::getRowCount()
+{
+   return AbstractTable::getRowCount("plot3D");
+}
+
+int PlotTable3D::getMaxId()
+{
+   return AbstractTable::getMaxId("plot3D");
 }
 
 bool PlotTable3D::existExpression(const QString& expression)
@@ -177,5 +214,10 @@ bool PlotTable3D::removeByExpression(const QString& expression)
 
 bool PlotTable3D::insertOrUpdate(const Plot3D& plot3D)
 {
-    return (existExpression(plot3D.expression) ? update(plot3D) : insert(plot3D));
+    SettingsTable table;
+    SettingsModel model = table.select();
+
+    return (existExpression(plot3D.expression) ? update(plot3D) :
+           (model.model2DRecordsCount <= getRowCount()) ? updateLast(plot3D) :
+           insert(plot3D));
 }

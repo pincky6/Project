@@ -78,6 +78,15 @@ bool RecordTable::removeByExpression(const QString& recordTypeId)
     return query.next();
 }
 
+bool RecordTable::clearTable()
+{
+    QSqlQuery query;
+    query.prepare("DELETE FROM records;");
+    query.exec();
+    qDebug() << "CLEAR ALL: " << query.lastError().text();
+    return query.next();
+}
+
 QVector<Record> RecordTable::selectAll()
 {
     QVector<Record> records;

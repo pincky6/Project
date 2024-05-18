@@ -160,6 +160,8 @@ void MainWindow::historySwitch(QString expression,
     ui->textEdit->setText(expression);
     if(type == record::type::RecordType::EXPRESSION)
     {
+        uploadToHistoryLabel();
+        ui->stackedWidget_3->setCurrentIndex((int)CalculatorArea::CALCULATOR_AREA);
         return;
     }
     (type == record::type::RecordType::PLOT2D) ?
@@ -254,13 +256,6 @@ void MainWindow::on_pushButton_graph_clicked()
     changeAreas();
 }
 
-
-void MainWindow::on_pushButton_clicked()
-{
-    ui->stackedWidget_3->setCurrentIndex((int)CalculatorArea::CALCULATOR_AREA);
-}
-
-
 void MainWindow::on_backPlotButtonClicked()
 {
     ui->stackedWidget_3->setCurrentIndex((int)CalculatorArea::CALCULATOR_AREA);
@@ -290,17 +285,17 @@ void MainWindow::on_settingsActionClicked()
 
 void MainWindow::on_backButtonClicked()
 {
+    uploadToHistoryLabel();
     ui->stackedWidget_3->setCurrentIndex((int)CalculatorArea::CALCULATOR_AREA);
 }
 
 void MainWindow::on_generateSTLButton_clicked()
 {
     bool checkOk = false;
-    QString userInput = QInputDialog::getText(this, "Введите название файла", "Если вы не введете "
-                                                                              "название файла будет использовано  стандартное имя \"3dModel\"\n\n"
-                                                                                                  "Название файла:",
-                                              QLineEdit::Normal, "",
-                                              &checkOk, Qt::WindowFlags(), Qt::InputMethodHint());
+    QString userInput = QInputDialog::getText(this, "Enter file name",
+                                              "If you do not enter a filename, the default name ‘3dModel’ will be used.\n\n"
+                                              "Filename:",
+                                              QLineEdit::Normal, "", &checkOk);
     if(!checkOk)
     {
         return;

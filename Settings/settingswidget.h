@@ -34,6 +34,12 @@ private slots:
 
     void on_save_2d_checkbox_toggled(bool checked);
 
+    void on_clearButton_clicked();
+
+    void on_exportButton_clicked();
+
+    void on_importButton_clicked();
+
 private:
     Ui::SettingsWidget *ui;
 };

@@ -46,7 +46,11 @@ public:
     bool insertOrUpdate(const Plot3D&);
     bool insert(const Plot3D&);
     bool update(const Plot3D&);
+    bool updateLast(const Plot3D&);
+    bool drop(unsigned int);
     Plot3D selectByExpression(const QString&);
+    int getRowCount();
+    int getMaxId();
 
     bool existExpression(const QString&);
 };
