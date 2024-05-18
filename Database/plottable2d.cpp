@@ -161,3 +161,8 @@ bool PlotTable2D::removeByExpression(const QString& expression)
     qDebug() << "REMOVE BY EXPRESSION: " << query.lastError().text();
     return query.next();
 }
+
+bool PlotTable2D::insertOrUpdate(const Plot2D& plot2D)
+{
+    return (existExpression(plot2D.expression) ? update(plot2D) : insert(plot2D));
+}

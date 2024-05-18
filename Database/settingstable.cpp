@@ -18,8 +18,12 @@ bool SettingsTable::create()
                     " model3DRecordsCount INTEGER"
                     ");");
     bool check = query.exec();
+    if(!exist())
+    {
+        check = check && insert(model);
+    }
     qDebug() << "CREATE: " << query.lastError().text();
-    return check && insert(model);
+    return check;
 }
 
 bool SettingsTable::insert(const SettingsModel& settingsModel)
@@ -67,8 +71,8 @@ bool SettingsTable::update(const SettingsModel& settingsModel)
                   " modelWidth  = :modelWidth,"
                   " modelLength = :modelLength,"
                   " modelHeight = :modelHeight,"
-                  " model2DRecordsCount := :model2DRecordsCount ,"
-                  " model3DRecordsCount := :model3DRecordsCount "
+                  " model2DRecordsCount = :model2DRecordsCount,"
+                  " model3DRecordsCount = :model3DRecordsCount"
                   " WHERE id = 1;");
     query.bindValue(":resolutionX", settingsModel.resolutionX);
     query.bindValue(":resolutionY", settingsModel.resolutionY);
@@ -83,6 +87,20 @@ bool SettingsTable::update(const SettingsModel& settingsModel)
     return check;
 }
 
+bool SettingsTable::insertOrUpdate(const SettingsModel& model)
+{
+    return (exist() ? update(model) : insert(model));
+}
+
+bool SettingsTable::exist()
+{
+    QSqlQuery query;
+    query.prepare("SELECT * FROM settings WHERE id = 1;");
+    query.exec();
+    qDebug() << "EXIST EXPRESSION: " << query.lastError().text();
+    return query.next();
+}
+
 bool SettingsTable::removeByExpression(const QString& expression)
 {
     Q_UNUSED(expression)
@@ -91,4 +109,27 @@ bool SettingsTable::removeByExpression(const QString& expression)
     query.exec();
     qDebug() << "REMOVE BY EXPRESSION: " << query.lastError().text();
     return query.next();
+}
+
+SettingsModel SettingsTable::select()
+{
+    QSqlQuery query;
+    query.prepare("SELECT * FROM settings WHERE id = 1;");
+    query.exec();
+    if(query.next())
+    {
+        int resolutionX = query.value("resolutionX").toInt();
+        int resolutionY = query.value("resolutionY").toInt();
+        int resolutionZ =  query.value("resolutionZ").toInt();
+        int modelWidth = query.value("modelWidth").toInt();
+        int modelLength =  query.value("modelLength").toInt();
+        int modelHeight = query.value("modelHeight").toInt();
+        int model2DRecordsCount = query.value("model2DRecordsCount").toInt();
+        int model3DRecordsCount = query.value("model3DRecordsCount").toInt();
+        qDebug() << "SELECT: " << query.lastError().text();
+        return SettingsModel(resolutionX, resolutionY, resolutionZ,
+                             modelWidth, modelLength, modelHeight,
+                             model2DRecordsCount, model3DRecordsCount);
+    }
+    return SettingsModel();
 }

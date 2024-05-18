@@ -284,6 +284,7 @@ void MainWindow::on_3DModeChanged()
 
 void MainWindow::on_settingsActionClicked()
 {
+    ui->settingsWidget->update();
     ui->stackedWidget_3->setCurrentIndex((int)CalculatorArea::SETTINGS_AREA);
 }
 
@@ -294,10 +295,21 @@ void MainWindow::on_backButtonClicked()
 
 void MainWindow::on_generateSTLButton_clicked()
 {
-    QString userInput = QInputDialog::getText(this, "Введите название файла", "Название файла:", QLineEdit::Normal, "");
-    if(userInput.isEmpty()){
+    bool checkOk = false;
+    QString userInput = QInputDialog::getText(this, "Введите название файла", "Если вы не введете "
+                                                                              "название файла будет использовано  стандартное имя \"3dModel\"\n\n"
+                                                                                                  "Название файла:",
+                                              QLineEdit::Normal, "",
+                                              &checkOk, Qt::WindowFlags(), Qt::InputMethodHint());
+    if(!checkOk)
+    {
+        return;
+    }
+    if(userInput.isEmpty())
+    {
         userInput = "3dModel.stl";
-    } else {
+    } else
+    {
         userInput += ".stl";
     }
     ui->graphicArea3D->loadToSTL(userInput);

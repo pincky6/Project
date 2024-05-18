@@ -114,16 +114,7 @@ void ImplicitPlotBuilder::draw(QPainter& painter, const QString& expression, int
         thread.get()->wait();
     }
     Plot2D plot2D(expression, edgeList);
-
-    if(table.existExpression(plot2D.expression))
-    {
-        table.update(plot2D);
-    }
-    else
-    {
-        table.insert(plot2D);
-    }
-
+    table.insertOrUpdate(plot2D);
 }
 
 

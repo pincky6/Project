@@ -82,3 +82,8 @@ bool CalculationsTable::existExpression(const QString& expression)
     qDebug() << "EXIST EXPRESSION: " << query.lastError().text();
     return query.next();
 }
+
+bool CalculationsTable::insertOrUpdate(const CalculationResult& plot2D)
+{
+    return (existExpression(plot2D.expression) ? update(plot2D) : insert(plot2D));
+}

@@ -60,14 +60,7 @@ void PlotArea3D::resetPlot(std::shared_ptr<std::vector<Vertex>> plotVertices,
     Plot3D plot3D(expressionsVector_[0], plotVertices,
                   plotIndices, maxScaleFactor_);
     PlotTable3D table;
-    if(table.existExpression(plot3D.expression))
-    {
-        table.update(plot3D);
-    }
-    else
-    {
-        table.insert(plot3D);
-    }
+    table.insertOrUpdate(plot3D);
 
     arrayPlotBuffer_.create();
     arrayPlotBuffer_.bind();

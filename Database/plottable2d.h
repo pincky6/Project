@@ -28,6 +28,7 @@ public:
     bool removeByExpression(const QString&) override;
     bool insert(const Plot2D&);
     bool update(const Plot2D&);
+    bool insertOrUpdate(const Plot2D&);
     Plot2D selectByExpression(const QString&);
 
     bool existExpression(const QString&);

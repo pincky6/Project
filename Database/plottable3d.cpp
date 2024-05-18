@@ -175,7 +175,7 @@ bool PlotTable3D::removeByExpression(const QString& expression)
     return query.next();
 }
 
-bool PlotTable3D::insertOrUpdate(const Plot3D &)
+bool PlotTable3D::insertOrUpdate(const Plot3D& plot3D)
 {
-
+    return (existExpression(plot3D.expression) ? update(plot3D) : insert(plot3D));
 }

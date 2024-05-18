@@ -309,6 +309,9 @@
               <property name="text">
                <string>Save all objects</string>
               </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
              </widget>
             </item>
             <item>
@@ -398,6 +401,9 @@
               </property>
               <property name="text">
                <string>Save all objects</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
@@ -520,5 +526,137 @@
   </layout>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>history_3d_records_count_lineedit</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>SettingsWidget</receiver>
+   <slot>lineEdit_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>103</x>
+     <y>327</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>204</x>
+     <y>267</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>history_2d_records_count_lineedit</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>SettingsWidget</receiver>
+   <slot>lineEdit_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>305</x>
+     <y>327</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>204</x>
+     <y>267</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>x_resolution_lineedit</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>SettingsWidget</receiver>
+   <slot>lineEdit_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>109</x>
+     <y>88</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>204</x>
+     <y>267</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>y_resolution_lineedit</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>SettingsWidget</receiver>
+   <slot>lineEdit_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>109</x>
+     <y>120</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>204</x>
+     <y>267</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>z_resolution_lineedit</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>SettingsWidget</receiver>
+   <slot>lineEdit_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>109</x>
+     <y>152</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>204</x>
+     <y>267</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>width_lineedit</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>SettingsWidget</receiver>
+   <slot>lineEdit_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>326</x>
+     <y>88</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>204</x>
+     <y>267</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>length_lineedit</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>SettingsWidget</receiver>
+   <slot>lineEdit_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>326</x>
+     <y>120</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>204</x>
+     <y>267</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>height_lineedit</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>SettingsWidget</receiver>
+   <slot>lineEdit_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>326</x>
+     <y>152</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>204</x>
+     <y>267</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>lineEdit_changed()</slot>
+ </slots>
 </ui>
