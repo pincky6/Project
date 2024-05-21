@@ -3,6 +3,7 @@
 
 #include "xyzplotcalculator.h"
 #include "cylindricalplotcalculator.h"
+#include "sphericalplotcalculator.h"
 
 namespace plot_builder
 {
@@ -20,7 +21,13 @@ namespace plot_builder
                                              firstRange, secondRange, thirdRange,
                                              resolution, screenResolution, parent);
             }
-            else if(mathCharacters.contains("ρ") || mathCharacters.contains("φ") || mathCharacters.contains("z"))
+            else if(mathCharacters.contains("θ") && mathCharacters.contains("φ"))
+            {
+                return new SphericalPlotCalculator(expression,
+                                                   firstRange, secondRange, thirdRange,
+                                                   resolution, screenResolution, parent);
+            }
+            else if(mathCharacters.contains("φ") || mathCharacters.contains("z"))
             {
                 return new CylindricalPlotCalculator(expression,
                                              firstRange, secondRange, thirdRange,

@@ -1,6 +1,7 @@
 #include "cylindricalplotcalculator.h"
 #include <algorithm>
 #include <QDebug>
+
 namespace plot_builder
 {
     CylindricalPlotCalculator::CylindricalPlotCalculator(const QString& expression,
@@ -25,16 +26,6 @@ namespace plot_builder
 
     void CylindricalPlotCalculator::work()
     {
-//        auto marchingCubes = plot_algorithms::MarchingCubes(expression_, recursiveDescent);
-//        QObject::connect(&marchingCubes, &plot_algorithms::MarchingCubes::sendProgress, this, &CylindricalPlotCalculator::sendProgress);
-//        auto plot = marchingCubes.triangulate_field(firstRange_, secondRange_, thirdRange_, resolution_, 0.9);
-//        std::for_each(std::get<0>(plot).begin(), std::get<0>(plot).end(), [this](Vertex& v){
-//            v.position.setX(v.position.x()/screenResolution_[0]);
-//            v.position.setY(v.position.y() / screenResolution_[1]);
-//            v.position.setZ(v.position.z()/ screenResolution_[2]);
-//        });
-//        vertices_ = std::move(std::get<0>(plot));
-//        indices_ = std::move(std::get<1>(plot));
         calulate();
     }
 

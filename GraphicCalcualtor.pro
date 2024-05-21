@@ -27,6 +27,7 @@ SOURCES += \
     PlotBuilderWorkers/implicitplotworker.cpp \
     PlotBuilderWorkers/plotbuilder.cpp \
     PlotBuilderWorkers/plotscheduler.cpp \
+    PlotBuilderWorkers/sphericalplotcalculator.cpp \
     PlotBuilderWorkers/stlmodelbuilder.cpp \
     PlotBuilderWorkers/stlmodelscheduler.cpp \
     PlotBuilderWorkers/xyzplotcalculator.cpp \
@@ -73,6 +74,7 @@ HEADERS += \
     PlotBuilderWorkers/plotbuilder.h \
     PlotBuilderWorkers/plotcalculatorfactory.h \
     PlotBuilderWorkers/plotscheduler.h \
+    PlotBuilderWorkers/sphericalplotcalculator.h \
     PlotBuilderWorkers/stlmodelbuilder.h \
     PlotBuilderWorkers/stlmodelscheduler.h \
     PlotBuilderWorkers/xyzplotcalculator.h \
