@@ -21,6 +21,7 @@ SOURCES += \
     Plot/abstractplotarea.cpp \
     Plot/iplotbuilder.cpp \
     Plot/plotarea2d.cpp \
+    PlotBuilderWorkers/abstractplotcalculator.cpp \
     PlotBuilderWorkers/abstractplotworker.cpp \
     PlotBuilderWorkers/implicitplotworker.cpp \
     PlotBuilderWorkers/plotscheduler.cpp \
@@ -64,6 +65,7 @@ HEADERS += \
     Plot/abstractplotarea.h \
     Plot/iplotbuilder.h \
     Plot/plotarea2d.h \
+    PlotBuilderWorkers/abstractplotcalculator.h \
     PlotBuilderWorkers/abstractplotworker.h \
     PlotBuilderWorkers/implicitplotworker.h \
     PlotBuilderWorkers/plotscheduler.h \
