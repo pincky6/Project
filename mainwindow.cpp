@@ -316,3 +316,8 @@ void MainWindow::on_historyButton_clicked()
     ui->historyWidget->update();
     ui->stackedWidget_3->setCurrentIndex((int)CalculatorArea::HISTORY_AREA);
 }
+
+void MainWindow::axes3DVisibileModel_changed()
+{
+    ui->graphicArea3D->setAxesVisibilityeMode(ui->action3D_Axes_On_Off->isChecked());
+}

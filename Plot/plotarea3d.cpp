@@ -16,7 +16,7 @@ PlotArea3D::PlotArea3D(QWidget *parent)
     indexAxesBuffers_{QOpenGLBuffer(QOpenGLBuffer::IndexBuffer),
                        QOpenGLBuffer(QOpenGLBuffer::IndexBuffer),
                        QOpenGLBuffer(QOpenGLBuffer::IndexBuffer)},
-    defaultLength_(20.0f), scaleFactor_(1.0f), maxScaleFactor_(1.0f), mZ_(-5.0f)
+    defaultLength_(20.0f), scaleFactor_(1.0f), maxScaleFactor_(1.0f), mZ_(-5.0f), isAxesVisible(true)
 {
     connect(&scheduler_, &PlotScheduler::updatePlot, this, &PlotArea3D::receiveData);
     scheduler_.start();
@@ -126,8 +126,10 @@ void PlotArea3D::paintGL()
     shaderProgram_.setUniformValue("u_modelMatrix", modelMatrix);
     shaderProgram_.setUniformValue("u_lightPosition", QVector4D(0.0f, 0.0f, 3.0f, 0.0f));
     shaderProgram_.setUniformValue("u_lightPower", 15.0f);
-
-    paintAxes();
+    if(isAxesVisible)
+    {
+        paintAxes();
+    }
     paintPlot();
 }
 
@@ -213,6 +215,12 @@ void PlotArea3D::freeSchedulers()
 {
     scheduler_.freeQueue();
     modelScheduler_.freeQueue();
+}
+
+void PlotArea3D::setAxesVisibilityeMode(bool mode)
+{
+    isAxesVisible = mode;
+    update();
 }
 
 void PlotArea3D::loadToSTL(const QString& filename)

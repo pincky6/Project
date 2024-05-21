@@ -1003,6 +1003,8 @@
     <addaction name="action3D"/>
     <addaction name="separator"/>
     <addaction name="actionSettings"/>
+    <addaction name="separator"/>
+    <addaction name="action3D_Axes_On_Off"/>
    </widget>
    <addaction name="menu3d_mode"/>
   </widget>
@@ -1034,6 +1036,17 @@
   <action name="actionSettings">
    <property name="text">
     <string>Settings</string>
+   </property>
+  </action>
+  <action name="action3D_Axes_On_Off">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>3D Axes On/Off</string>
    </property>
   </action>
  </widget>
@@ -1598,6 +1611,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>action3D_Axes_On_Off</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>axes3DVisibileModel_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>222</x>
+     <y>298</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>buttonClicked()</slot>
@@ -1607,5 +1636,6 @@
   <slot>on_backPlotButtonClicked()</slot>
   <slot>on_settingsActionClicked()</slot>
   <slot>on_backButtonClicked()</slot>
+  <slot>axes3DVisibileModel_changed()</slot>
  </slots>
 </ui>

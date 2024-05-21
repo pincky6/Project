@@ -28,6 +28,8 @@ public:
     void destroyPlotBuffer();
     void freeSchedulers();
 
+    void setAxesVisibilityeMode(bool);
+
     void loadToSTL(const QString&);
     ~PlotArea3D();
 protected:
@@ -70,6 +72,8 @@ private:
     float scaleFactor_;
     float maxScaleFactor_;
     float mZ_;
+
+    bool isAxesVisible;
 
     std::vector<QString> expressionsVector_;
 };

@@ -74,6 +74,8 @@ private slots:
 
     void on_historyButton_clicked();
 
+    void axes3DVisibileModel_changed();
+
 private:
     void createMenuForButton(QPushButton*, const std::initializer_list<QString>&, void(MainWindow::*)());
 public slots:
