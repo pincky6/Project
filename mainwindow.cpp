@@ -28,6 +28,7 @@ MainWindow::MainWindow(QWidget *parent)
     createMenuForButton(ui->pushButton_cotFunctions, {"cot", "acot", "coth", "acoth"},  &MainWindow::functionButtonMenuClicked);
     createMenuForButton(ui->pushButton_logFunctions, {"log", "ln", "lg"},  &MainWindow::functionButtonMenuClicked);
     createMenuForButton(ui->pushButton_var, {"x", "y", "z"},  &MainWindow::menuButtonClicked);
+    createMenuForButton(ui->pushButton_polar, {"φ", "ρ", "θ"}, &MainWindow::menuButtonClicked);
 
     uploadToHistoryLabel();
 }

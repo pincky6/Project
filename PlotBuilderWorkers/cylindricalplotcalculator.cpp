@@ -65,6 +65,7 @@ namespace plot_builder
         for(int k = 0; k < resolution_[2]; k++)
         {
             float z = zLower + float(k) * dz;
+
             for (int i = 0; i <= resolution_[0]; i++)
             {
                 float angle = fiLower + float(i)* dFi;
@@ -75,13 +76,9 @@ namespace plot_builder
                 float y = res * sin(angle) / screenResolution_[1];
 
                 vertices_.push_back(Vertex(
-                    x,
-                    y,
-                    z / screenResolution_[2],
-                    x / xLen,
-                    y / yLen,
-                    z / (screenResolution_[2]* zLen)
-                    ));
+                    x, y, z / screenResolution_[2],
+                    x / xLen, y / yLen, z / (screenResolution_[2]* zLen)
+                ));
             }
         }
         unsigned int numRows = resolution_[2];
@@ -89,22 +86,6 @@ namespace plot_builder
         for (unsigned int i = 0; i < numRows; i++) {
             for(unsigned int j = 0; j < numCols - 1; j++)
             {
-//                for (unsigned int j = 0; j <= numCols - 1; j++) {
-//                    // Calculate indices for the four vertices of the current cell
-//                    unsigned int index0 = i * numCols + j;
-//                    unsigned int index1 = index0 + 1;
-//                    unsigned int index2 = (i + 1) * numCols + j;
-//                    unsigned int index3 = index2 + 1;
-
-//                    // Add indices to form two triangles
-//                    indices_.push_back(index0);
-//                    indices_.push_back(index1);
-//                    indices_.push_back(index2);
-
-//                    indices_.push_back(index1);
-//                    indices_.push_back(index3);
-//                    indices_.push_back(index2);
-//                }
                 indices_.push_back(i * numRows + j);
                 indices_.push_back((i + 1) * numRows + j);
                 indices_.push_back(i * numRows + j + 1);
@@ -114,7 +95,6 @@ namespace plot_builder
                 indices_.push_back((i + 1) * numRows + j);
             }
         }
-       // qDebug() << vertices_.size() << indices_.size() << *std::max_element(indices_.begin(), indices_.end());
     }
 
     float CylindricalPlotCalculator::function(float fi, float ro, float z)
