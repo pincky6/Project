@@ -41,7 +41,7 @@ using Resolution = std::array<float, 3>;
         std::vector<Vertex> vertices_;
         std::vector<unsigned int> indices_;
 
-        RecursiveDecsent recursiveDescent;
+        RecursiveDecsent recursiveDescent_;
     };
 }
 

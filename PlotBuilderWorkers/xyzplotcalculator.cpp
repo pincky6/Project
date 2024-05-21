@@ -10,22 +10,22 @@ namespace plot_builder
         AbstractPlotCalculator(expression, xRange, yRange, zRange,
                                resolution, screenResolution, parent)
     {
-        recursiveDescent.addArgumentToTable("x", firstRange_[0]);
-        recursiveDescent.addArgumentToTable("y", secondRange_[0]);
-        recursiveDescent.addArgumentToTable("z", thirdRange_[0]);
+        recursiveDescent_.addArgumentToTable("x", firstRange_[0]);
+        recursiveDescent_.addArgumentToTable("y", secondRange_[0]);
+        recursiveDescent_.addArgumentToTable("z", thirdRange_[0]);
     }
 
     XYZPlotCalculator::XYZPlotCalculator(XYZPlotCalculator&& calculator) noexcept:
         AbstractPlotCalculator(std::move(calculator))
     {
-        recursiveDescent.addArgumentToTable("x", firstRange_[0]);
-        recursiveDescent.addArgumentToTable("y", secondRange_[0]);
-        recursiveDescent.addArgumentToTable("z", thirdRange_[0]);
+        recursiveDescent_.addArgumentToTable("x", firstRange_[0]);
+        recursiveDescent_.addArgumentToTable("y", secondRange_[0]);
+        recursiveDescent_.addArgumentToTable("z", thirdRange_[0]);
     }
 
     void XYZPlotCalculator::work()
     {
-        auto marchingCubes = plot_algorithms::MarchingCubes(expression_, recursiveDescent);
+        auto marchingCubes = plot_algorithms::MarchingCubes(expression_, recursiveDescent_);
         QObject::connect(&marchingCubes, &plot_algorithms::MarchingCubes::sendProgress, this, &XYZPlotCalculator::sendProgress);
         auto plot = marchingCubes.triangulate_field(firstRange_, secondRange_, thirdRange_, resolution_, 0.9);
         std::for_each(std::get<0>(plot).begin(), std::get<0>(plot).end(), [this](Vertex& v){
@@ -35,6 +35,5 @@ namespace plot_builder
         });
         vertices_ = std::move(std::get<0>(plot));
         indices_ = std::move(std::get<1>(plot));
-        if(vertices_.size() == 0) return;
     }
 }

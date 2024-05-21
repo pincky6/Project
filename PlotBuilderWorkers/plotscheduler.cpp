@@ -33,9 +33,9 @@ void PlotScheduler::work()
     task->wait();
 }
 
-void PlotScheduler::addTask(std::unique_ptr<XYZPlotBuilder>&& newBuilder)
+void PlotScheduler::addTask(std::unique_ptr<PlotBuilder>&& newBuilder)
 {
-    QObject::connect(newBuilder.get(), &XYZPlotBuilder::buildingPlotFinish,
+    QObject::connect(newBuilder.get(), &PlotBuilder::buildingPlotFinish,
             this, &PlotScheduler::receiveData);
     newBuilder->connect();
     tasks.push_back(std::move(newBuilder));

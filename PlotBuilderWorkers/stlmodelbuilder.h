@@ -1,9 +1,7 @@
 #ifndef STLMODELBUILDER_H
 #define STLMODELBUILDER_H
 
-#include "abstractplotworker.h"
-
-#include "xyzplotcalculator.h"
+#include "abstractplotcalculator.h"
 #include "figures.h"
 
 namespace plot_builder{
@@ -24,7 +22,7 @@ namespace plot_builder{
         void connect();
         void start();
 
-        XYZPlotCalculator &getPlotCalculator();
+        AbstractPlotCalculator* getPlotCalculator();
 
         void setFilename(const QString&);
         void setExpression(const QString&);
@@ -35,7 +33,7 @@ namespace plot_builder{
         void endFileWriting();
         void wrongCalculations();
     private:
-        std::unique_ptr<XYZPlotCalculator> plotCalculator_;
+        std::unique_ptr<AbstractPlotCalculator> plotCalculator_;
 
         QString filename_;
 

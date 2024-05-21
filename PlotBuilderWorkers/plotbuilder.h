@@ -1,5 +1,5 @@
-#ifndef XYZPLOTBUILDER_H
-#define XYZPLOTBUILDER_H
+#ifndef PLOTBUILDER_H
+#define PLOTBUILDER_H
 
 #include <QVector>
 #include <QThread>
@@ -8,18 +8,18 @@
 #include "Marching Cubes/types.h"
 #include "figures.h"
 
-#include "xyzplotcalculator.h"
-
 #include <vector>
+
+#include "abstractplotcalculator.h"
 
 namespace plot_builder{
 
-    class XYZPlotBuilder: public AbstractPlotWorker
+    class PlotBuilder: public AbstractPlotWorker
     {
         Q_OBJECT
     public:
-        XYZPlotBuilder();
-        XYZPlotBuilder(std::vector<Cube>&, const Resolution&, unsigned int);
+        PlotBuilder();
+        PlotBuilder(std::vector<Cube>&, const Resolution&, unsigned int);
         void connect();
         void start();
         void work() override;
@@ -30,7 +30,7 @@ namespace plot_builder{
         void setResolution(const Resolution&);
         void setExpression(const std::vector<QString>&);
 
-        ~XYZPlotBuilder();
+        ~PlotBuilder();
     public slots:
         void workFinished();
     signals:
@@ -38,7 +38,7 @@ namespace plot_builder{
     private:
         std::vector<Cube> cubes_;
         Resolution resolution_;
-        std::vector<std::unique_ptr<plot_builder::XYZPlotCalculator>> plotCalculators_;
+        std::vector<std::unique_ptr<plot_builder::AbstractPlotCalculator>> plotCalculators_;
         std::shared_ptr<std::vector<Vertex>> vertices_;
         std::shared_ptr<std::vector<unsigned int>> indices_;
         std::vector<QString> expressionsVector_;
@@ -49,4 +49,4 @@ namespace plot_builder{
     };
 }
 
-#endif // XYZPLOTBUILDER_H
+#endif // PLOTBUILDER_H

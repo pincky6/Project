@@ -6,7 +6,7 @@
 
 #include <list>
 
-#include "PlotBuilderWorkers/xyzplotbuilder.h"
+#include "PlotBuilderWorkers/plotbuilder.h"
 
 namespace plot_builder
 {
@@ -17,7 +17,7 @@ namespace plot_builder
         explicit PlotScheduler(QObject *parent = nullptr);
         virtual void work() override;
 
-        void addTask(std::unique_ptr<XYZPlotBuilder>&&);
+        void addTask(std::unique_ptr<PlotBuilder>&&);
         void wait() override;
         void start();
         void freeQueue();
@@ -28,7 +28,7 @@ namespace plot_builder
         void updatePlot(std::shared_ptr<std::vector<Vertex>> verticies,
                         std::shared_ptr<std::vector<unsigned int>> indices);
     private:
-        std::list<std::unique_ptr<XYZPlotBuilder>> tasks;
+        std::list<std::unique_ptr<PlotBuilder>> tasks;
     };
 }
 

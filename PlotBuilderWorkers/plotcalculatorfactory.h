@@ -4,13 +4,12 @@
 #include "xyzplotcalculator.h"
 #include "cylindricalplotcalculator.h"
 
-#include <QVector>
 namespace plot_builder
 {
     class PlotCalculatorFactory
     {
     public:
-        static plot_builder::AbstractPlotCalculator* produce(const QString& expression,
+        static AbstractPlotCalculator* produce(const QString& expression,
                                                              Range firstRange, Range secondRange, Range thirdRange,
                                                              Resolution resolution, Resolution screenResolution, QObject* parent = nullptr)
         {
@@ -24,7 +23,7 @@ namespace plot_builder
             else if(mathCharacters.contains("ρ") || mathCharacters.contains("φ") || mathCharacters.contains("z"))
             {
                 return new CylindricalPlotCalculator(expression,
-                                             firstRange, thirdRange,
+                                             firstRange, secondRange, thirdRange,
                                              resolution, screenResolution, parent);
             }
             return nullptr;

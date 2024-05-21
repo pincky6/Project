@@ -28,21 +28,21 @@ void plot_builder::STLModelScheduler::addTask(std::unique_ptr<STLModelBuilder>&&
     QProgressDialog* progressDialog = new QProgressDialog(widget);
 
 
-    progressDialog->setLabelText("Генерация модели...");
+    progressDialog->setLabelText("Generation Model...");
     QObject::connect(&builder, &STLModelBuilder::endCalculations, widget, [progressDialog](){
         progressDialog->setValue(75);
-        progressDialog->setLabelText("Сохранение модели...");
+        progressDialog->setLabelText("Save Model...");
     });
     QObject::connect(&builder, &STLModelBuilder::endFileWriting, widget, [progressDialog](){
         progressDialog->setValue(100);
-        progressDialog->setLabelText("Модель сгенерирована!");
+        progressDialog->setLabelText("Model Generated");
     });
     QObject::connect(progressDialog, &QProgressDialog::canceled, &builder, &STLModelBuilder::quit);
     QObject::connect(&builder, &STLModelBuilder::wrongCalculations, widget, [progressDialog](){
         progressDialog->cancel();
     });
     builder.connect();
-    QObject::connect(&builder.getPlotCalculator(), &XYZPlotCalculator::sendProgress, widget, [progressDialog](float progress){
+    QObject::connect(builder.getPlotCalculator(), &AbstractPlotCalculator::sendProgress, widget, [progressDialog](float progress){
         qDebug() << progress;
         progressDialog->setValue(static_cast<int>(progress * 75));
     });

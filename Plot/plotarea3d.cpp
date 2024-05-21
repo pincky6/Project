@@ -329,7 +329,7 @@ void PlotArea3D::initPlotBuilder(float length)
     Cube field(Vertex(-length, -length, -length), length * 2, length * 2, length * 2);
     auto cubes = field.divide(std::thread::hardware_concurrency() - 1);
     qDebug() << cubes.size();
-    std::unique_ptr<XYZPlotBuilder> builder(new XYZPlotBuilder());
+    std::unique_ptr<PlotBuilder> builder(new PlotBuilder());
     if(expressionsVector_.size() != 0)
     {
         builder->setCubes(cubes);

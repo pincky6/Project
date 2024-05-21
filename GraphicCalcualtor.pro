@@ -25,10 +25,10 @@ SOURCES += \
     PlotBuilderWorkers/abstractplotworker.cpp \
     PlotBuilderWorkers/cylindricalplotcalculator.cpp \
     PlotBuilderWorkers/implicitplotworker.cpp \
+    PlotBuilderWorkers/plotbuilder.cpp \
     PlotBuilderWorkers/plotscheduler.cpp \
     PlotBuilderWorkers/stlmodelbuilder.cpp \
     PlotBuilderWorkers/stlmodelscheduler.cpp \
-    PlotBuilderWorkers/xyzplotbuilder.cpp \
     PlotBuilderWorkers/xyzplotcalculator.cpp \
     Settings/calculatorsettingsconfig.cpp \
     Settings/settingswidget.cpp \
@@ -70,11 +70,11 @@ HEADERS += \
     PlotBuilderWorkers/abstractplotworker.h \
     PlotBuilderWorkers/cylindricalplotcalculator.h \
     PlotBuilderWorkers/implicitplotworker.h \
+    PlotBuilderWorkers/plotbuilder.h \
     PlotBuilderWorkers/plotcalculatorfactory.h \
     PlotBuilderWorkers/plotscheduler.h \
     PlotBuilderWorkers/stlmodelbuilder.h \
     PlotBuilderWorkers/stlmodelscheduler.h \
-    PlotBuilderWorkers/xyzplotbuilder.h \
     PlotBuilderWorkers/xyzplotcalculator.h \
     Settings/calculatorsettingsconfig.h \
     Settings/settingswidget.h \

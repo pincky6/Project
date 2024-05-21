@@ -16,11 +16,14 @@ public:
     CylindricalPlotCalculator(const QString&,
                       Range, Range, Range,
                       Resolution, Resolution,
-                      AbstractPlotWorker* parent = nullptr);
+                      QObject* parent = nullptr);
     CylindricalPlotCalculator(CylindricalPlotCalculator&&) noexcept;
     CylindricalPlotCalculator() = delete;
     CylindricalPlotCalculator(const CylindricalPlotCalculator&) = delete;
     void work() override;
+private:
+    void calulate();
+    float function(float fi, float ro, float z);
 };
 }
 

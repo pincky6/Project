@@ -1,35 +1,37 @@
-#include "xyzplotbuilder.h"
-#include <QObject>
+#include "plotbuilder.h"
+#include "plotcalculatorfactory.h"
 
+#include <QObject>
+#include <QDebug>
 using namespace plot_builder;
 
-XYZPlotBuilder::XYZPlotBuilder()
+PlotBuilder::PlotBuilder()
 {}
 
-XYZPlotBuilder::XYZPlotBuilder(std::vector<Cube>& cubes,
+PlotBuilder::PlotBuilder(std::vector<Cube>& cubes,
                                const Resolution&,
                                unsigned int threadsCount)
     : cubes_(cubes), threadsCount_(threadsCount)
 {
 }
 
-void XYZPlotBuilder::connect()
+void PlotBuilder::connect()
 {
     vertices_.reset(new std::vector<Vertex>());
     indices_.reset(new std::vector<unsigned int>());
     QThread* threadPtr = thread_.get();
-    QObject::connect(threadPtr, &QThread::started, this, &XYZPlotBuilder::run);
-    QObject::connect(this, &XYZPlotBuilder::finished, this, &XYZPlotBuilder::workFinished);
-    QObject::connect(this, &XYZPlotBuilder::finished, &*threadPtr, &QThread::quit);
+    QObject::connect(threadPtr, &QThread::started, this, &PlotBuilder::run);
+    QObject::connect(this, &PlotBuilder::finished, this, &PlotBuilder::workFinished);
+    QObject::connect(this, &PlotBuilder::finished, &*threadPtr, &QThread::quit);
     moveToThread(thread_.get());
 }
 
-void XYZPlotBuilder::start()
+void PlotBuilder::start()
 {
     thread_->start();
 }
 
-void XYZPlotBuilder::work()
+void PlotBuilder::work()
 {
     if(cubes_.size() == 0) return;
     Resolution screenResolution{
@@ -48,7 +50,7 @@ void XYZPlotBuilder::work()
                         point.position.y() + cubes_[i].length};
         Range zRange = {point.position.z(),
                         point.position.z() + cubes_[i].height};
-        plotCalculators_.emplace_back(new XYZPlotCalculator(
+        plotCalculators_.emplace_back(PlotCalculatorFactory::produce(
                                             std::cref(expressionsVector_[0]),
                                             xRange, yRange, zRange,
                                             resolution_, screenResolution));
@@ -65,6 +67,7 @@ void XYZPlotBuilder::work()
             (*indices_).push_back(index + currentSize);
         }
     }
+    qDebug() << vertices_->size() << indices_->size();
     auto minmax = std::minmax_element(vertices_->cbegin(), vertices_->cend(),
                                       [](auto&& lhs, auto&& rhs){
                                           return lhs.position.z() < rhs.position.z();
@@ -96,7 +99,7 @@ void XYZPlotBuilder::work()
     });
 }
 
-void XYZPlotBuilder::wait()
+void PlotBuilder::wait()
 {
     for(auto&& plotCalculator: plotCalculators_)
     {
@@ -111,27 +114,27 @@ void XYZPlotBuilder::wait()
 }
 
 
-void XYZPlotBuilder::setCubes(std::vector<Cube>& newCubes)
+void PlotBuilder::setCubes(std::vector<Cube>& newCubes)
 {
     cubes_ = newCubes;
 }
 
-void XYZPlotBuilder::setThreadsNum(unsigned int newThreadsCount)
+void PlotBuilder::setThreadsNum(unsigned int newThreadsCount)
 {
     threadsCount_ = newThreadsCount;
 }
 
-void XYZPlotBuilder::setResolution(const Resolution& newResolution)
+void PlotBuilder::setResolution(const Resolution& newResolution)
 {
     resolution_ = newResolution;
 }
 
-void XYZPlotBuilder::setExpression(const std::vector<QString>& newExpression)
+void PlotBuilder::setExpression(const std::vector<QString>& newExpression)
 {
     expressionsVector_ = newExpression;
 }
 
-XYZPlotBuilder::~XYZPlotBuilder()
+PlotBuilder::~PlotBuilder()
 {
     for(auto&& plotCalculator: plotCalculators_)
     {
@@ -140,7 +143,7 @@ XYZPlotBuilder::~XYZPlotBuilder()
     thread_->quit();
 }
 
-void XYZPlotBuilder::workFinished()
+void PlotBuilder::workFinished()
 {
     thread_->quit();
     if((*vertices_).size() > 0)

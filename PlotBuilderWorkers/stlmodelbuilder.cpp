@@ -3,6 +3,8 @@
 #include <QThread>
 #include <QDebug>
 
+#include "plotcalculatorfactory.h"
+
 plot_builder::STLModelBuilder::STLModelBuilder()
 {
 
@@ -39,15 +41,6 @@ void plot_builder::STLModelBuilder::work()
     }
     QFile file(filename_);
     file.open(QIODevice::ReadWrite);
-//    if(file.exists())
-//    {
-//        file.open(QIODevice::WriteOnly | QIODevice::Truncate);
-//    }
-//    else
-//    {
-
-
-//    }
 
     QString facetString = "facet normal  %0 %1 %2\n"
                           "outer loop\n"
@@ -59,12 +52,12 @@ void plot_builder::STLModelBuilder::work()
     file.write("solid example\n");
     std::vector<Vertex> vertices = std::move(plotCalculator_->getVertices());
     std::vector<unsigned int> indices = std::move(plotCalculator_->getIndices());
-
+    qDebug() << vertices.size() << indices.size() << *std::max_element(indices.begin(), indices.end());
     for(std::size_t i = 0; i < indices.size(); i += 3)
     {
-        Vertex& vertex1 = vertices.at(i);
-        Vertex& vertex2 = vertices.at(i + 1);
-        Vertex& vertex3 = vertices.at(i + 2);
+        Vertex& vertex1 = vertices.at(indices[i]);
+        Vertex& vertex2 = vertices.at(indices[i + 1]);
+        Vertex& vertex3 = vertices.at(indices[i + 2]);
         file.write(facetString.arg(vertex1.normal.x())
                        .arg(vertex1.normal.y())
                        .arg(vertex1.normal.z())
@@ -103,7 +96,7 @@ void plot_builder::STLModelBuilder::connect()
                     point.position.y() + cube_.length};
     Range zRange = {point.position.z(),
                     point.position.z() + cube_.height};
-    plotCalculator_.reset(new XYZPlotCalculator(
+    plotCalculator_.reset(PlotCalculatorFactory::produce(
         std::cref(expression_),
         xRange, yRange, zRange,
         resolution_, screenResolution));
@@ -115,9 +108,9 @@ void plot_builder::STLModelBuilder::start()
     thread_->start();
 }
 
-plot_builder::XYZPlotCalculator &plot_builder::STLModelBuilder::getPlotCalculator()
+plot_builder::AbstractPlotCalculator* plot_builder::STLModelBuilder::getPlotCalculator()
 {
-    return *plotCalculator_;
+    return plotCalculator_.get();
 }
 
 void plot_builder::STLModelBuilder::setFilename(const QString& filename)
