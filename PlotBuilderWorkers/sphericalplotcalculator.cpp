@@ -7,7 +7,7 @@ namespace plot_builder
                                                      Range fiRange, Range thetaRange, Range zRange,
                                                      Resolution resolution, Resolution screenResolution, QObject *parent):
         AbstractPlotCalculator(expression,
-                               fiRange, thetaRange, zRange,
+                             {0, 2 * M_PI}, {0, 2 * M_PI}, zRange,
                                resolution, screenResolution, parent)
     {
 

@@ -28,11 +28,11 @@ namespace plot_builder
                                                    resolution, screenResolution, parent);
             }
             else if(mathCharacters.contains("φ") || mathCharacters.contains("z"))
-            {
-                return new CylindricalPlotCalculator(expression,
-                                             firstRange, secondRange, thirdRange,
-                                             resolution, screenResolution, parent);
-            }
+                                                     {
+                                                         return new CylindricalPlotCalculator(expression,
+                                                                                              firstRange, secondRange, thirdRange,
+                                                                                              resolution, screenResolution, parent);
+                                                     }
             return nullptr;
         }
     private:

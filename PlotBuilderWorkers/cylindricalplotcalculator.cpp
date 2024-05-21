@@ -8,7 +8,7 @@ namespace plot_builder
                                          Range roRange, Range secondRange, Range thirdRange_,
                                          Resolution resolution, Resolution screenResolution,
                                          QObject* parent):
-    AbstractPlotCalculator(expression, secondRange, roRange, thirdRange_,
+    AbstractPlotCalculator(expression, {0, 2 * M_PI}, roRange, thirdRange_,
                                resolution, screenResolution, parent)
     {
         recursiveDescent_.addArgumentToTable("φ", firstRange_[0]);
@@ -56,15 +56,16 @@ namespace plot_builder
         for(int k = 0; k < resolution_[2]; k++)
         {
             float z = zLower + float(k) * dz;
-
             for (int i = 0; i <= resolution_[0]; i++)
             {
                 float angle = fiLower + float(i)* dFi;
+
 
                 float res = function(angle, 0.0f, z);
 
                 float x = res * cos(angle) / screenResolution_[0];
                 float y = res * sin(angle) / screenResolution_[1];
+
 
                 vertices_.push_back(Vertex(
                     x, y, z / screenResolution_[2],
@@ -74,7 +75,8 @@ namespace plot_builder
         }
         unsigned int numRows = resolution_[2];
         unsigned int numCols = resolution_[0];
-        for (unsigned int i = 0; i < numRows; i++) {
+        for (unsigned int i = 0; i < numRows; i++)
+        {
             for(unsigned int j = 0; j < numCols - 1; j++)
             {
                 indices_.push_back(i * numRows + j);
