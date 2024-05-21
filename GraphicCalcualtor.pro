@@ -23,6 +23,7 @@ SOURCES += \
     Plot/plotarea2d.cpp \
     PlotBuilderWorkers/abstractplotcalculator.cpp \
     PlotBuilderWorkers/abstractplotworker.cpp \
+    PlotBuilderWorkers/cylindricalplotcalculator.cpp \
     PlotBuilderWorkers/implicitplotworker.cpp \
     PlotBuilderWorkers/plotscheduler.cpp \
     PlotBuilderWorkers/stlmodelbuilder.cpp \
@@ -67,7 +68,9 @@ HEADERS += \
     Plot/plotarea2d.h \
     PlotBuilderWorkers/abstractplotcalculator.h \
     PlotBuilderWorkers/abstractplotworker.h \
+    PlotBuilderWorkers/cylindricalplotcalculator.h \
     PlotBuilderWorkers/implicitplotworker.h \
+    PlotBuilderWorkers/plotcalculatorfactory.h \
     PlotBuilderWorkers/plotscheduler.h \
     PlotBuilderWorkers/stlmodelbuilder.h \
     PlotBuilderWorkers/stlmodelscheduler.h \

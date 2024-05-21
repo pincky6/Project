@@ -18,7 +18,7 @@ using Resolution = std::array<float, 3>;
         XYZPlotCalculator(const QString&,
                        Range, Range, Range,
                        Resolution, Resolution,
-                       AbstractPlotWorker* parent = nullptr);
+                       QObject* parent = nullptr);
         XYZPlotCalculator(XYZPlotCalculator&&) noexcept;
         XYZPlotCalculator() = delete;
         XYZPlotCalculator(const XYZPlotCalculator&) = delete;

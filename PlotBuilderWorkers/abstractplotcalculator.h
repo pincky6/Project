@@ -17,7 +17,7 @@ using Resolution = std::array<float, 3>;
         AbstractPlotCalculator(const QString&,
                                Range, Range, Range,
                                Resolution, Resolution,
-                               AbstractPlotWorker* parent);
+                               QObject* parent);
         AbstractPlotCalculator(AbstractPlotCalculator&&) noexcept;
         AbstractPlotCalculator() = delete;
         AbstractPlotCalculator(const AbstractPlotCalculator&) = delete;

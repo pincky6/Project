@@ -6,7 +6,7 @@ namespace plot_builder
     AbstractPlotCalculator::AbstractPlotCalculator(const QString& expression,
                                          Range firstRange, Range secondRange, Range thirdRange,
                                          Resolution resolution, Resolution screenResolution,
-                                         AbstractPlotWorker* parent):
+                                         QObject* parent):
         AbstractPlotWorker(parent), expression_(expression),
         firstRange_(firstRange), secondRange_(secondRange), thirdRange_(thirdRange),
         resolution_(resolution), screenResolution_(screenResolution)

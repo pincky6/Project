@@ -38,15 +38,16 @@ void plot_builder::STLModelBuilder::work()
         return;
     }
     QFile file(filename_);
-    if(file.exists())
-    {
-        file.open(QIODevice::WriteOnly | QIODevice::Truncate);
-    }
-    else
-    {
+    file.open(QIODevice::ReadWrite);
+//    if(file.exists())
+//    {
+//        file.open(QIODevice::WriteOnly | QIODevice::Truncate);
+//    }
+//    else
+//    {
 
-        file.open(QIODevice::ReadWrite);
-    }
+
+//    }
 
     QString facetString = "facet normal  %0 %1 %2\n"
                           "outer loop\n"

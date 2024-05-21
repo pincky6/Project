@@ -6,7 +6,7 @@ namespace plot_builder
     XYZPlotCalculator::XYZPlotCalculator(const QString& expression,
                                    Range xRange, Range yRange, Range zRange,
                                    Resolution resolution, Resolution screenResolution,
-                                   AbstractPlotWorker* parent):
+                                   QObject* parent):
         AbstractPlotCalculator(expression, xRange, yRange, zRange,
                                resolution, screenResolution, parent)
     {
