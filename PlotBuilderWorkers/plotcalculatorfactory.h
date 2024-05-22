@@ -15,7 +15,7 @@ namespace plot_builder
                                                              Resolution resolution, Resolution screenResolution, QObject* parent = nullptr)
         {
             auto mathCharacters = containsCharacters(expression);
-            if(mathCharacters.contains("x") && mathCharacters.contains("y") && mathCharacters.contains("z"))
+            if(mathCharacters.contains("x") || mathCharacters.contains("y") || mathCharacters.contains("z"))
             {
                 return new XYZPlotCalculator(expression,
                                              firstRange, secondRange, thirdRange,
