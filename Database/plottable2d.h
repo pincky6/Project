@@ -3,6 +3,8 @@
 
 #include <QVector>
 
+#include <QSharedPointer>
+
 #include "abstracttable.h"
 
 #include "Marching Squares/marchingsquares.h"
@@ -18,7 +20,7 @@ public:
     void deserializeEdgeList(const QByteArray&);
 public:
     QString expression;
-    std::shared_ptr<marching_squares::EdgeList > vertices;
+    QSharedPointer<marching_squares::EdgeList > vertices;
 };
 
 class PlotTable2D: public AbstractTable

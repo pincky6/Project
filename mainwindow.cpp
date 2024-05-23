@@ -303,7 +303,7 @@ void MainWindow::on_backPlotButtonClicked()
     ui->stackedWidget_3->setCurrentIndex((int)CalculatorArea::CALCULATOR_AREA);
     if(ui->stackedWidget_4->currentIndex() == (int)PlotAreas::PLOT_AREA_3D)
     {
-        ui->graphicArea3D->destroyPlotBuffer();
+        ui->graphicArea3D->destroyPlotBuffers();
         ui->graphicArea3D->freeSchedulers();
     }
     uploadToHistoryLabel();

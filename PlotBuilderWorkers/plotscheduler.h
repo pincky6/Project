@@ -6,6 +6,8 @@
 
 #include <list>
 
+#include <QSharedPointer>
+
 #include "PlotBuilderWorkers/plotbuilder.h"
 
 namespace plot_builder
@@ -17,18 +19,20 @@ namespace plot_builder
         explicit PlotScheduler(QObject *parent = nullptr);
         virtual void work() override;
 
-        void addTask(std::unique_ptr<PlotBuilder>&&);
+        void addTask(QSharedPointer<PlotBuilder>);
         void wait() override;
         void start();
         void freeQueue();
     public slots:
-        void receiveData(std::shared_ptr<std::vector<Vertex>> verticies,
-                         std::shared_ptr<std::vector<unsigned int>> indices);
+        void receiveData(QSharedPointer<std::vector<Vertex>> verticies,
+                         QSharedPointer<std::vector<unsigned int>> indices,
+                         QString);
     signals:
-        void updatePlot(std::shared_ptr<std::vector<Vertex>> verticies,
-                        std::shared_ptr<std::vector<unsigned int>> indices);
+        void updatePlot(QSharedPointer<std::vector<Vertex>> verticies,
+                        QSharedPointer<std::vector<unsigned int>> indices,
+                        QString);
     private:
-        std::list<std::unique_ptr<PlotBuilder>> tasks;
+        std::list<QSharedPointer<PlotBuilder>> tasks;
     };
 }
 

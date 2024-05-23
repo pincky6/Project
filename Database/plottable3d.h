@@ -5,7 +5,7 @@
 #include <QString>
 
 #include <vector>
-#include <memory.h>
+#include <QSharedPointer>
 
 #include "Marching Cubes/types.h"
 
@@ -14,13 +14,14 @@
 #include "serializablecontainers.h"
 
 
+
 struct Plot3D: public SerializableContainers
 {
 public:
     Plot3D(const QString&, QByteArray,
            QByteArray, float);
-    Plot3D(const QString&, std::shared_ptr<std::vector<Vertex>>,
-           std::shared_ptr<std::vector<unsigned int>>, float);
+    Plot3D(const QString&, QSharedPointer<std::vector<Vertex>>,
+           QSharedPointer<std::vector<unsigned int>>, float);
 
     QByteArray serializeVertices();
     QByteArray serializeIndices();
@@ -33,8 +34,8 @@ public:
     ~Plot3D();
 public:
     QString expression;
-    std::shared_ptr<std::vector<Vertex>> vertices;
-    std::shared_ptr<std::vector<unsigned int>> indices;
+    QSharedPointer<std::vector<Vertex>> vertices;
+    QSharedPointer<std::vector<unsigned int>> indices;
     float maxScaleFactor;
 };
 

@@ -12,7 +12,6 @@ using namespace plot_builder;
 
 PlotArea3D::PlotArea3D(QWidget *parent)
     : QOpenGLWidget(parent),
-    indexPlotBuffer_(QOpenGLBuffer::IndexBuffer),
     indexAxesBuffers_{QOpenGLBuffer(QOpenGLBuffer::IndexBuffer),
                        QOpenGLBuffer(QOpenGLBuffer::IndexBuffer),
                        QOpenGLBuffer(QOpenGLBuffer::IndexBuffer)},
@@ -44,35 +43,37 @@ void PlotArea3D::setExpressions(const std::vector<QString>& newExpressionsVector
     }
 }
 
-void PlotArea3D::resetPlot(std::shared_ptr<std::vector<Vertex>> plotVertices,
-                           std::shared_ptr<std::vector<unsigned int>> plotIndices,
+void PlotArea3D::resetPlot(QSharedPointer<std::vector<Vertex>> plotVertices,
+                           QSharedPointer<std::vector<unsigned int>> plotIndices,
                            const QString& expression)
 {
-    if(plotVertices.get() == nullptr ||
-        plotIndices.get() == nullptr)
+    if(!plotVertices.get() ||
+       !plotIndices.get())
     {
         return;
     }
     if(plotVertices->size() == 0 ||
         plotIndices->size() == 0) return;
     qDebug() << "dasd";
-    destroyPlotBuffer();
+    destroyPlotBuffer(expression);
     Plot3D plot3D(expression, plotVertices,
                   plotIndices, maxScaleFactor_);
     PlotTable3D table;
     table.insertOrUpdate(plot3D);
 
-    arrayPlotBuffer_.create();
-    arrayPlotBuffer_.bind();
-    arrayPlotBuffer_.allocate(plot3D.vertices->data(),
+    arrayPlotBuffers_[expression].create();
+    arrayPlotBuffers_[expression].bind();
+    arrayPlotBuffers_[expression].allocate(plot3D.vertices->data(),
                               plot3D.vertices->size() * sizeof(Vertex));
-    arrayPlotBuffer_.release();
+    arrayPlotBuffers_[expression].release();
 
-    indexPlotBuffer_.create();
-    indexPlotBuffer_.bind();
-    indexPlotBuffer_.allocate(plot3D.indices->data(),
+
+    indexPlotBuffers_[expression] = QOpenGLBuffer(QOpenGLBuffer::IndexBuffer);
+    indexPlotBuffers_[expression].create();
+    indexPlotBuffers_[expression].bind();
+    indexPlotBuffers_[expression].allocate(plot3D.indices->data(),
                               plot3D.indices->size() * sizeof(unsigned int));
-    indexPlotBuffer_.release();
+    indexPlotBuffers_[expression].release();
 
     initAxes(defaultLength_ * scaleFactor_);
 
@@ -170,43 +171,62 @@ void PlotArea3D::paintAxes()
 
 void PlotArea3D::paintPlot()
 {
-    if(!arrayPlotBuffer_.isCreated())
+    for(auto&& expression: expressionsVector_)
+    {
+        if(!arrayPlotBuffers_[expression].isCreated())
+        {
+            return;
+        }
+        arrayPlotBuffers_[expression].bind();
+
+        float offset = 0;
+
+        int vertLoc = shaderProgram_.attributeLocation("a_position");
+        shaderProgram_.enableAttributeArray(vertLoc);
+        shaderProgram_.setAttributeBuffer(vertLoc, GL_FLOAT, offset, 3, sizeof(Vertex));
+
+        offset += sizeof(QVector3D);
+
+        int normLoc = shaderProgram_.attributeLocation("a_normal");
+        shaderProgram_.enableAttributeArray(normLoc);
+        shaderProgram_.setAttributeBuffer(normLoc, GL_FLOAT, offset, 3, sizeof(Vertex));
+
+        offset += sizeof(QVector3D);
+
+        int colorLoc = shaderProgram_.attributeLocation("a_color");
+        shaderProgram_.enableAttributeArray(colorLoc);
+        shaderProgram_.setAttributeBuffer(colorLoc, GL_FLOAT, offset, 3, sizeof(Vertex));
+
+        indexPlotBuffers_[expression].bind();
+        glDrawElements(GL_TRIANGLES, indexPlotBuffers_[expression].size(), GL_UNSIGNED_INT, 0);
+
+        arrayPlotBuffers_[expression].release();
+        indexPlotBuffers_[expression].release();
+    }
+}
+
+void PlotArea3D::destroyPlotBuffers()
+{
+    for(auto&& expression: expressionsVector_)
+    {
+        if(arrayPlotBuffers_[expression].isCreated())
+        {
+            arrayPlotBuffers_[expression].destroy();
+            indexPlotBuffers_[expression].destroy();
+        }
+    }
+}
+
+void PlotArea3D::destroyPlotBuffer(const QString& expression)
+{
+    if(expression.isEmpty())
     {
         return;
     }
-    arrayPlotBuffer_.bind();
-
-    float offset = 0;
-
-    int vertLoc = shaderProgram_.attributeLocation("a_position");
-    shaderProgram_.enableAttributeArray(vertLoc);
-    shaderProgram_.setAttributeBuffer(vertLoc, GL_FLOAT, offset, 3, sizeof(Vertex));
-
-    offset += sizeof(QVector3D);
-
-    int normLoc = shaderProgram_.attributeLocation("a_normal");
-    shaderProgram_.enableAttributeArray(normLoc);
-    shaderProgram_.setAttributeBuffer(normLoc, GL_FLOAT, offset, 3, sizeof(Vertex));
-
-    offset += sizeof(QVector3D);
-
-    int colorLoc = shaderProgram_.attributeLocation("a_color");
-    shaderProgram_.enableAttributeArray(colorLoc);
-    shaderProgram_.setAttributeBuffer(colorLoc, GL_FLOAT, offset, 3, sizeof(Vertex));
-
-    indexPlotBuffer_.bind();
-    glDrawElements(GL_TRIANGLES, indexPlotBuffer_.size(), GL_UNSIGNED_INT, 0);
-
-    arrayPlotBuffer_.release();
-    indexPlotBuffer_.release();
-}
-
-void PlotArea3D::destroyPlotBuffer()
-{
-    if(arrayPlotBuffer_.isCreated())
+    if(arrayPlotBuffers_[expression].isCreated())
     {
-        arrayPlotBuffer_.destroy();
-        indexPlotBuffer_.destroy();
+        arrayPlotBuffers_[expression].destroy();
+        indexPlotBuffers_[expression].destroy();
     }
 }
 
@@ -301,12 +321,13 @@ void PlotArea3D::wheelEvent(QWheelEvent *event)
     update();
 }
 
-void PlotArea3D::receiveData(std::shared_ptr<std::vector<Vertex>> plotVertices,
-                             std::shared_ptr<std::vector<unsigned int>> plotIndices)
+void PlotArea3D::receiveData(QSharedPointer<std::vector<Vertex>> plotVertices,
+                             QSharedPointer<std::vector<unsigned int>> plotIndices,
+                             QString expression)
 {
     qDebug() << "receive plot";
 
-    resetPlot(plotVertices, plotIndices, "");
+    resetPlot(plotVertices, plotIndices, expression);
 }
 
 
@@ -334,20 +355,20 @@ void PlotArea3D::initPlotBuilder(float length, const QString& expression)
     Cube field(Vertex(-length, -length, -length), length * 2, length * 2, length * 2);
     auto cubes = field.divide(std::thread::hardware_concurrency() - 1);
     qDebug() << cubes.size();
-    std::unique_ptr<PlotBuilder> builder(new PlotBuilder());
-    if(expressionsVector_.size() != 0)
+    QSharedPointer<PlotBuilder> builder(new PlotBuilder());
+    if(!expression.isEmpty())
     {
         builder->setCubes(cubes);
         builder->setThreadsNum(std::thread::hardware_concurrency() - 1);
         builder->setResolution({length * 2, length * 2, length * 2});
-        builder->setExpression(expressionsVector_);
+        builder->setExpression(expression);
         if(schedulers_.find(expression) == schedulers_.end())
         {
             schedulers_[expression].reset(new PlotScheduler);
             connect(schedulers_[expression].get(), &PlotScheduler::updatePlot, this, &PlotArea3D::receiveData);
             schedulers_[expression]->start();
         }
-        schedulers_[expression]->addTask(std::move(builder));
+        schedulers_[expression]->addTask(builder);
     }
 }
 

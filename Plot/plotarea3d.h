@@ -25,10 +25,11 @@ class PlotArea3D final: public QOpenGLWidget, public QOpenGLFunctions, public Ab
 public:
     PlotArea3D(QWidget *parent = 0);
     void setExpressions(const std::vector<QString>&) override;
-    void resetPlot(std::shared_ptr<std::vector<Vertex>>,
-                   std::shared_ptr<std::vector<unsigned int>>,
+    void resetPlot(QSharedPointer<std::vector<Vertex>>,
+                   QSharedPointer<std::vector<unsigned int>>,
                    const QString&);
-    void destroyPlotBuffer();
+    void destroyPlotBuffers();
+    void destroyPlotBuffer(const QString&);
     void freeSchedulers();
 
     void setAxesVisibilityeMode(bool);
@@ -49,8 +50,9 @@ protected:
     void mouseMoveEvent(QMouseEvent* event) override;
     void wheelEvent(QWheelEvent* event) override;
 private slots:
-    void receiveData(std::shared_ptr<std::vector<Vertex>>,
-                     std::shared_ptr<std::vector<unsigned int>>);
+    void receiveData(QSharedPointer<std::vector<Vertex>>,
+                     QSharedPointer<std::vector<unsigned int>>,
+                     QString);
 signals:
     void stopThread();
 private:
@@ -60,8 +62,8 @@ private:
 private:
     QMatrix4x4 projectionMatrix_;
     QOpenGLShaderProgram shaderProgram_;
-    QOpenGLBuffer arrayPlotBuffer_;
-    QOpenGLBuffer indexPlotBuffer_;
+    QMap<QString, QOpenGLBuffer> arrayPlotBuffers_;
+    QMap<QString, QOpenGLBuffer> indexPlotBuffers_;
 
     QOpenGLBuffer arrayAxesBuffers_[3];
     QOpenGLBuffer indexAxesBuffers_[3];

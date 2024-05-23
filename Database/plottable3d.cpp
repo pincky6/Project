@@ -15,8 +15,8 @@ Plot3D::Plot3D(const QString& expression_, QByteArray serializedVertices,
     deserializeIndices(serializedIndices);
 }
 
-Plot3D::Plot3D(const QString& expression_, std::shared_ptr<std::vector<Vertex>> vertices_,
-               std::shared_ptr<std::vector<unsigned int>> indices_, float maxScaleFactor_):
+Plot3D::Plot3D(const QString& expression_, QSharedPointer<std::vector<Vertex>> vertices_,
+               QSharedPointer<std::vector<unsigned int>> indices_, float maxScaleFactor_):
     expression(expression_), vertices(vertices_),
     indices(indices_), maxScaleFactor(maxScaleFactor_)
 {}

@@ -1,4 +1,5 @@
 #include "plotscheduler.h"
+
 #include <QDebug>
 using namespace plot_builder;
 
@@ -33,7 +34,7 @@ void PlotScheduler::work()
     task->wait();
 }
 
-void PlotScheduler::addTask(std::unique_ptr<PlotBuilder>&& newBuilder)
+void PlotScheduler::addTask(QSharedPointer<PlotBuilder> newBuilder)
 {
     QObject::connect(newBuilder.get(), &PlotBuilder::buildingPlotFinish,
             this, &PlotScheduler::receiveData);
@@ -47,12 +48,14 @@ void PlotScheduler::wait()
     thread_->wait();
 }
 
-void PlotScheduler::receiveData(std::shared_ptr<std::vector<Vertex>> verticies,
-                                std::shared_ptr<std::vector<unsigned int>> indicies)
+void PlotScheduler::receiveData(QSharedPointer<std::vector<Vertex>> verticies,
+                                QSharedPointer<std::vector<unsigned int>> indicies,
+                                QString expression)
 {
-    if(verticies.get() == nullptr || indicies.get() == nullptr)
+    qDebug() << "scheduler update plot";
+    if(!verticies.get() || !indicies.get())
     {
         return;
     }
-    emit updatePlot(verticies, indicies);
+    emit updatePlot(verticies, indicies, expression);
 }

@@ -51,7 +51,7 @@ void PlotBuilder::work()
         Range zRange = {point.position.z(),
                         point.position.z() + cubes_[i].height};
         plotCalculators_.emplace_back(PlotCalculatorFactory::produce(
-                                            std::cref(expressionsVector_[0]),
+                                            std::cref(expression_),
                                             xRange, yRange, zRange,
                                             resolution_, screenResolution));
     }
@@ -109,7 +109,7 @@ void PlotBuilder::wait()
     if(vertices_ == nullptr) return;
     if((*vertices_).size() != 0)
     {
-        emit buildingPlotFinish(vertices_, indices_);
+        emit finished();
     }
 }
 
@@ -129,9 +129,9 @@ void PlotBuilder::setResolution(const Resolution& newResolution)
     resolution_ = newResolution;
 }
 
-void PlotBuilder::setExpression(const std::vector<QString>& newExpression)
+void PlotBuilder::setExpression(const QString& newExpression)
 {
-    expressionsVector_ = newExpression;
+    expression_ = newExpression;
 }
 
 PlotBuilder::~PlotBuilder()
@@ -148,6 +148,6 @@ void PlotBuilder::workFinished()
     thread_->quit();
     if((*vertices_).size() > 0)
     {
-        emit buildingPlotFinish(vertices_, indices_);
+        emit buildingPlotFinish(vertices_, indices_, expression_);
     }
 }

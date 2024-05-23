@@ -8,6 +8,8 @@
 #include "Marching Cubes/types.h"
 #include "figures.h"
 
+#include <QSharedPointer>
+
 #include <vector>
 
 #include "abstractplotcalculator.h"
@@ -28,20 +30,22 @@ namespace plot_builder{
         void setCubes(std::vector<Cube>&);
         void setThreadsNum(unsigned int);
         void setResolution(const Resolution&);
-        void setExpression(const std::vector<QString>&);
+        void setExpression(const QString&);
 
         ~PlotBuilder();
     public slots:
         void workFinished();
     signals:
-        void buildingPlotFinish(std::shared_ptr<std::vector<Vertex>>, std::shared_ptr<std::vector<unsigned int>>);
+        void buildingPlotFinish(QSharedPointer<std::vector<Vertex>>,
+                                QSharedPointer<std::vector<unsigned int>>,
+                                QString);
     private:
         std::vector<Cube> cubes_;
         Resolution resolution_;
         std::vector<std::unique_ptr<plot_builder::AbstractPlotCalculator>> plotCalculators_;
-        std::shared_ptr<std::vector<Vertex>> vertices_;
-        std::shared_ptr<std::vector<unsigned int>> indices_;
-        std::vector<QString> expressionsVector_;
+        QSharedPointer<std::vector<Vertex>> vertices_;
+        QSharedPointer<std::vector<unsigned int>> indices_;
+        QString expression_;
 
 
         QMutex mutex_;
