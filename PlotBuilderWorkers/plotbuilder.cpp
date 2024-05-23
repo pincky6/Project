@@ -134,6 +134,21 @@ void PlotBuilder::setExpression(const QString& newExpression)
     expression_ = newExpression;
 }
 
+QSharedPointer<std::vector<Vertex> > PlotBuilder::getVertices()
+{
+    return vertices_;
+}
+
+QSharedPointer<std::vector<unsigned int> > PlotBuilder::getIndices()
+{
+    return indices_;
+}
+
+QString PlotBuilder::getExpression()
+{
+    return expression_;
+}
+
 PlotBuilder::~PlotBuilder()
 {
     for(auto&& plotCalculator: plotCalculators_)
@@ -146,8 +161,4 @@ PlotBuilder::~PlotBuilder()
 void PlotBuilder::workFinished()
 {
     thread_->quit();
-    if((*vertices_).size() > 0)
-    {
-        emit buildingPlotFinish(vertices_, indices_, expression_);
-    }
 }

@@ -32,12 +32,15 @@ void PlotScheduler::work()
     tasks.pop_front();
     task->start();
     task->wait();
+    if(!task->getVertices() || !task->getIndices())
+    {
+        return;
+    }
+    emit updatePlot(task->getVertices(), task->getIndices(), task->getExpression());
 }
 
 void PlotScheduler::addTask(QSharedPointer<PlotBuilder> newBuilder)
 {
-    QObject::connect(newBuilder.get(), &PlotBuilder::buildingPlotFinish,
-            this, &PlotScheduler::receiveData);
     newBuilder->connect();
     tasks.push_back(std::move(newBuilder));
 }
@@ -46,16 +49,4 @@ void PlotScheduler::wait()
 {
     stopThread();
     thread_->wait();
-}
-
-void PlotScheduler::receiveData(QSharedPointer<std::vector<Vertex>> verticies,
-                                QSharedPointer<std::vector<unsigned int>> indicies,
-                                QString expression)
-{
-    qDebug() << "scheduler update plot";
-    if(!verticies.get() || !indicies.get())
-    {
-        return;
-    }
-    emit updatePlot(verticies, indicies, expression);
 }

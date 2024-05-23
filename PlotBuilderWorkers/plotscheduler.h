@@ -23,10 +23,6 @@ namespace plot_builder
         void wait() override;
         void start();
         void freeQueue();
-    public slots:
-        void receiveData(QSharedPointer<std::vector<Vertex>> verticies,
-                         QSharedPointer<std::vector<unsigned int>> indices,
-                         QString);
     signals:
         void updatePlot(QSharedPointer<std::vector<Vertex>> verticies,
                         QSharedPointer<std::vector<unsigned int>> indices,

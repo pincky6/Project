@@ -32,6 +32,10 @@ namespace plot_builder{
         void setResolution(const Resolution&);
         void setExpression(const QString&);
 
+        QSharedPointer<std::vector<Vertex>> getVertices();
+        QSharedPointer<std::vector<unsigned int>> getIndices();
+        QString getExpression();
+
         ~PlotBuilder();
     public slots:
         void workFinished();

@@ -48,12 +48,16 @@ void PlotArea3D::resetPlot(QSharedPointer<std::vector<Vertex>> plotVertices,
                            const QString& expression)
 {
     if(!plotVertices.get() ||
-       !plotIndices.get())
+       !plotIndices.get() || expression.isEmpty())
     {
         return;
     }
     if(plotVertices->size() == 0 ||
-        plotIndices->size() == 0) return;
+        plotIndices->size() == 0 ||
+        expression.isEmpty())
+    {
+        return;
+    }
     qDebug() << "dasd";
     destroyPlotBuffer(expression);
     Plot3D plot3D(expression, plotVertices,
