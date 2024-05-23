@@ -5,6 +5,10 @@
 #include "cylindricalplotcalculator.h"
 #include "sphericalplotcalculator.h"
 
+#define MAX_XYZ_ARGUMENT_COUNT 3
+#define MAX_CYLINDRICAL_ARGUMENT_COUNT 2
+#define MAX_SPHERICAL_ARGUMENT_COUNT 2
+
 namespace plot_builder
 {
     class PlotCalculatorFactory
@@ -15,24 +19,31 @@ namespace plot_builder
                                                              Resolution resolution, Resolution screenResolution, QObject* parent = nullptr)
         {
             auto mathCharacters = containsCharacters(expression);
-            if(mathCharacters.contains("x") || mathCharacters.contains("y") || mathCharacters.contains("z"))
+            if(mathCharacters.size() > 3 || mathCharacters.size() == 0)
+            {
+                return nullptr;
+            }
+            if(mathCharacters.size() <= 3 &&
+               (mathCharacters.contains("x") || mathCharacters.contains("y") || mathCharacters.contains("z")))
             {
                 return new XYZPlotCalculator(expression,
                                              firstRange, secondRange, thirdRange,
                                              resolution, screenResolution, parent);
             }
-            else if(mathCharacters.contains("θ") && mathCharacters.contains("φ"))
+            else if(mathCharacters.size() <= MAX_CYLINDRICAL_ARGUMENT_COUNT &&
+                    mathCharacters.contains("θ") && mathCharacters.contains("φ"))
             {
                 return new SphericalPlotCalculator(expression,
                                                    firstRange, secondRange, thirdRange,
                                                    resolution, screenResolution, parent);
             }
-            else if(mathCharacters.contains("φ") || mathCharacters.contains("z"))
-                                                     {
-                                                         return new CylindricalPlotCalculator(expression,
-                                                                                              firstRange, secondRange, thirdRange,
-                                                                                              resolution, screenResolution, parent);
-                                                     }
+            else if(mathCharacters.size() <= MAX_SPHERICAL_ARGUMENT_COUNT &&
+                    (mathCharacters.contains("φ") || mathCharacters.contains("z")))
+            {
+                return new CylindricalPlotCalculator(expression,
+                                                     firstRange, secondRange, thirdRange,
+                                                     resolution, screenResolution, parent);
+            }
             return nullptr;
         }
     private:

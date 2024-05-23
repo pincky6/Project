@@ -2,6 +2,7 @@
 #include "ui_systemwidget.h"
 #include <QDebug>
 #include<QLineEdit>
+#include <vector>
 
 SystemWidget::SystemWidget(QWidget *parent) :
     QWidget(parent),
@@ -32,14 +33,14 @@ void SystemWidget::setRows(const std::size_t & numOfRows_)
     }
 }
 
-QVector<QString> SystemWidget::getExpressionsOfSystem()
+std::vector<QString> SystemWidget::getSystemExpressions()
 {
-    QVector<QString> vectorOfExpressions(numOfRows);
+    std::vector<QString> expressionsVector(numOfRows);
     for(std::size_t i = 0; i < numOfRows; i++)
     {
-        vectorOfExpressions.push_back(rows[i]->text());
+        expressionsVector.push_back(rows[i]->text());
     }
-    return vectorOfExpressions ;
+    return expressionsVector;
 }
 
 void SystemWidget::removeRows()

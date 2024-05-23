@@ -17,7 +17,7 @@ public:
     explicit SystemWidget(QWidget *parent = nullptr);
 
     void setRows(const size_t& i);
-    QVector<QString> getExpressionsOfSystem();
+    std::vector<QString> getSystemExpressions();
     void removeRows();
 
     void setNextActiveRow();
