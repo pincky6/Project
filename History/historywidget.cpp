@@ -81,6 +81,7 @@ void HistoryWidget::itemDoubleClicked(QListWidgetItem* item)
 
 void HistoryWidget::on_backButton_clicked()
 {
+    deleteAllItems();
     emit backButtonClicked();
 }
 
