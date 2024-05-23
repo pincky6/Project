@@ -40,6 +40,8 @@ std::vector<QString> SystemWidget::getSystemExpressions()
     {
         expressionsVector.push_back(rows[i]->text());
     }
+    expressionsVector.erase(std::remove(expressionsVector.begin(), expressionsVector.end(), ""),
+                            expressionsVector.end());
     return expressionsVector;
 }
 
@@ -55,6 +57,18 @@ void SystemWidget::removeRows()
     rows.clear();
 }
 
+void SystemWidget::removeTextInActiveRow()
+{
+    rows[activeRow]->setText("");
+}
+
+void SystemWidget::removeSymbolInActiveRow()
+{
+    QString inputFieldString = rows[activeRow]->text();
+    inputFieldString.erase(inputFieldString.end() - 1, inputFieldString.end());
+    rows[activeRow]->setText(inputFieldString);
+}
+
 void SystemWidget::setNextActiveRow()
 {
     std::size_t oldValue = activeRow;
@@ -66,7 +80,7 @@ void SystemWidget::setNextActiveRow()
     rows[activeRow]->setStyleSheet(QString("QLineEdit {border-width: 1px; border-style: solid; border-color: blue;}"));
 }
 
-void SystemWidget::addTextAtActiveRow(const QString& str)
+void SystemWidget::addTextInActiveRow(const QString& str)
 {
     rows[activeRow]->setText(rows[activeRow]->text() + str);
 }

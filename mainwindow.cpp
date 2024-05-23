@@ -74,7 +74,14 @@ void MainWindow::uploadToHistoryLabel()
 void MainWindow::changeAreas()
 {
     std::vector<QString> expressionsVector;
-    expressionsVector.push_back(ui->textEdit->toPlainText());
+    if(ui->stackedWidget_2->currentIndex() == (int)InputArea::EXPRESSIONS)
+    {
+        expressionsVector.push_back(ui->textEdit->toPlainText());
+    }
+    else
+    {
+        expressionsVector = ui->systemWidget->getSystemExpressions();
+    }
 
     if(ui->action2D->isChecked())
     {
@@ -91,26 +98,38 @@ void MainWindow::changeAreas()
 
 void MainWindow::buttonClicked()
 {
-    if(ui->stackedWidget_2->currentIndex() == 0)
+    if(ui->stackedWidget_2->currentIndex() == (int)InputArea::EXPRESSIONS)
+    {
         ui->textEdit->setText(ui->textEdit->toPlainText() + ((QPushButton*)sender())->text());
+    }
     else
-        ui->systemWidget->addTextAtActiveRow(((QPushButton*)sender())->text());
+    {
+        ui->systemWidget->addTextInActiveRow(((QPushButton*)sender())->text());
+    }
 }
 
 void MainWindow::menuButtonClicked()
 {
-    if(ui->stackedWidget_2->currentIndex() == 0)
+    if(ui->stackedWidget_2->currentIndex() == (int)InputArea::EXPRESSIONS)
+    {
         ui->textEdit->setText(ui->textEdit->toPlainText() + ((QAction*)sender())->text());
+    }
     else
-        ui->systemWidget->addTextAtActiveRow(((QAction*)sender())->text());
+    {
+        ui->systemWidget->addTextInActiveRow(((QAction*)sender())->text());
+    }
 }
 
 void MainWindow::functionButtonClicked()
 {
-    if(ui->stackedWidget_2->currentIndex() == 0)
+    if(ui->stackedWidget_2->currentIndex() == (int)InputArea::EXPRESSIONS)
+    {
         ui->textEdit->setText(ui->textEdit->toPlainText() + ((QPushButton*)sender())->text() + "(");
+    }
     else
-        ui->systemWidget->addTextAtActiveRow(((QPushButton*)sender())->text() + "(");
+    {
+        ui->systemWidget->addTextInActiveRow(((QPushButton*)sender())->text() + "(");
+    }
 }
 
 void MainWindow::functionButtonMenuClicked()
@@ -118,10 +137,14 @@ void MainWindow::functionButtonMenuClicked()
     QTextEdit& textEdit = *ui->textEdit;
     QString str = (((QAction*)sender())->text() == "log") ?  ((QAction*)sender())->text() + "()("
                                                            : ((QAction*)sender())->text() + "(";
-    if(ui->stackedWidget_2->currentIndex() == 0)
+    if(ui->stackedWidget_2->currentIndex() == (int)InputArea::EXPRESSIONS)
+    {
         textEdit.setText(textEdit.toPlainText() + str);
+    }
     else
-        ui->systemWidget->addTextAtActiveRow(str);
+    {
+        ui->systemWidget->addTextInActiveRow(str);
+    }
 }
 
 void MainWindow::on_swapLayoutButton_clicked()
@@ -174,25 +197,39 @@ void MainWindow::historySwitch(QString expression,
 
 void MainWindow::on_pushButton_CE_clicked()
 {
-    ui->textEdit->setText("");
+    if(ui->stackedWidget_2->currentIndex() == (int)InputArea::EXPRESSIONS)
+    {
+        ui->textEdit->setText("");
+    }
+    else
+    {
+        ui->systemWidget->removeTextInActiveRow();
+    }
 }
 
 
 void MainWindow::on_pushButton_C_clicked()
 {
-    QString inputFieldString = ui->textEdit->toPlainText();
-    inputFieldString.erase(inputFieldString.end() - 1, inputFieldString.end());
-    ui->textEdit->setText(inputFieldString);
+    if(ui->stackedWidget_2->currentIndex() == (int)InputArea::EXPRESSIONS)
+    {
+        QString inputFieldString = ui->textEdit->toPlainText();
+        inputFieldString.erase(inputFieldString.end() - 1, inputFieldString.end());
+        ui->textEdit->setText(inputFieldString);
+    }
+    else
+    {
+        ui->systemWidget->removeSymbolInActiveRow();
+    }
 }
 
 
 void MainWindow::on_pushButton_system_clicked()
 {
-    if(ui->stackedWidget_2->currentIndex() == 1)
+    if(ui->stackedWidget_2->currentIndex() == (int)InputArea::SYSTEM_WIDGET)
     {
         ui->systemWidget->removeRows();
         ui->pushButton_system->setText("{");
-        ui->stackedWidget_2->setCurrentIndex(0);
+        ui->stackedWidget_2->setCurrentIndex((int)InputArea::EXPRESSIONS);
         return;
     }
     bool ok;
@@ -212,13 +249,13 @@ void MainWindow::on_pushButton_system_clicked()
     }
     ui->systemWidget->setRows(numOfRows);
     ui->pushButton_system->setText("y=f(x)");
-    ui->stackedWidget_2->setCurrentIndex(1);
+    ui->stackedWidget_2->setCurrentIndex((int)InputArea::SYSTEM_WIDGET);
 }
 
 
 void MainWindow::on_pushButton_tab_clicked()
 {
-    if(ui->stackedWidget_2->currentIndex() == 0)
+    if(ui->stackedWidget_2->currentIndex() == (int)InputArea::EXPRESSIONS)
     {
         return;
     }
@@ -227,6 +264,10 @@ void MainWindow::on_pushButton_tab_clicked()
 
 void MainWindow::on_pushButton_equal_clicked()
 {
+    if(ui->stackedWidget_2->currentIndex() == (int)InputArea::SYSTEM_WIDGET)
+    {
+        return;
+    }
     RecursiveDecsent recursiveDecsent;
     try{
         CalculationsTable table;

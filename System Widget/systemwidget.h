@@ -20,8 +20,11 @@ public:
     std::vector<QString> getSystemExpressions();
     void removeRows();
 
+    void removeTextInActiveRow();
+    void removeSymbolInActiveRow();
+
     void setNextActiveRow();
-    void addTextAtActiveRow(const QString&);
+    void addTextInActiveRow(const QString&);
 
     ~SystemWidget();
 private:

@@ -37,6 +37,12 @@ class MainWindow : public QMainWindow
         PLOT_AREA_3D
     };
 
+    enum class InputArea
+    {
+        EXPRESSIONS = 0,
+        SYSTEM_WIDGET
+    };
+
 public:
     MainWindow(QWidget *parent = nullptr);
 
