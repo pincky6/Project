@@ -6,6 +6,7 @@
 #include <QDebug>
 #include <thread>
 #include <QVector>
+#include <QSharedPointer>
 
 #include <Database/plottable2d.h>
 
@@ -27,28 +28,52 @@ std::unique_ptr<IPlotBuilder> IPlotBuilder::makePlotBuilder(PlotType plotType)
 
 void ExplicitPlotBuilder::draw(QPainter& painter, const QString& expression, int width, int height)
 {
-    std::vector<QPointF> vectorOfPoints;
-    ExplicitPlotPointsCoordinate plotCoordinate;
     float maxDiff = 0.35;
-    plotCoordinate.getPointsForPlot(vectorOfPoints, expression, width, height);
-    for(std::size_t i = 1; i < vectorOfPoints.size(); i++)
+    PlotTable2D table;
+    if(table.existExpression(expression, width, height))
     {
-        if(fabs(vectorOfPoints[i].x() - vectorOfPoints[i - 1].x()) <= maxDiff)
-            painter.drawLine(vectorOfPoints[i - 1], vectorOfPoints[i]);
+        Plot2D plot2D = table.selectByExpressionPlot(expression);
+        for(std::size_t i = 1; i < plot2D.vertices->size(); i++)
+        {
+            if(fabs((*plot2D.vertices)[i].x() - (*plot2D.vertices)[i - 1].x()) <= maxDiff)
+                painter.drawLine((*plot2D.vertices)[i - 1], (*plot2D.vertices)[i]);
+        }
+        return;
     }
+    QSharedPointer<std::vector<QPointF>> vectorOfPoints(new std::vector<QPointF>);
+    ExplicitPlotPointsCoordinate plotCoordinate;
+    plotCoordinate.getPointsForPlot(*vectorOfPoints, expression, width, height);
+    for(std::size_t i = 1; i < (*vectorOfPoints).size(); i++)
+    {
+        if(fabs((*vectorOfPoints)[i].x() - (*vectorOfPoints)[i - 1].x()) <= maxDiff)
+            painter.drawLine((*vectorOfPoints)[i - 1], (*vectorOfPoints)[i]);
+    }
+    Plot2D plot2D(expression, QSharedPointer(vectorOfPoints), width, height);
+    table.insertOrUpdate(plot2D);
 }
 
 void PolarPlotBuilder::draw(QPainter& painter, const QString& expression, int width, int height)
 {
-    std::vector<QPointF> vectorOfPoints;
-    PolarPlotPointsCoordinate  plotCoordiante;
-    plotCoordiante.getPointsForPlot(vectorOfPoints, expression, width, height);
-
-    for(std::size_t i = 1; i < vectorOfPoints.size(); i++)
+    PlotTable2D table;
+    if(table.existExpression(expression, width, height))
     {
-
-        painter.drawLine(vectorOfPoints[i - 1], vectorOfPoints[i]);
+        Plot2D plot2D = table.selectByExpressionPlot(expression);
+        for(std::size_t i = 1; i < plot2D.vertices->size(); i++)
+        {
+            painter.drawLine((*plot2D.vertices)[i - 1], (*plot2D.vertices)[i]);
+        }
+        return;
     }
+    QSharedPointer<std::vector<QPointF>> vectorOfPoints(new std::vector<QPointF>);
+    PolarPlotPointsCoordinate  plotCoordiante;
+    plotCoordiante.getPointsForPlot(*vectorOfPoints, expression, width, height);
+
+    for(std::size_t i = 1; i < vectorOfPoints->size(); i++)
+    {
+        painter.drawLine((*vectorOfPoints)[i - 1], (*vectorOfPoints)[i]);
+    }
+    Plot2D plot2D(expression, vectorOfPoints, width, height);
+    table.insertOrUpdate(plot2D);
 }
 
 
@@ -84,9 +109,9 @@ void ImplicitPlotBuilder::divideDisplay(float width, float height, float top, fl
 void ImplicitPlotBuilder::draw(QPainter& painter, const QString& expression, int width, int height)
 {
     PlotTable2D table;
-    if(table.existExpression(expression))
+    if(table.existExpression(expression, width, height))
     {
-        Plot2D plot2D = table.selectByExpression(expression);
+        Plot2DImplicit plot2D = table.selectByExpression(expression);
         for(auto&& point: *plot2D.vertices)
         {
             painter.drawPoint((float)width/2.0 + point[0][0] *40.0, height/2.0 - (float)point[0][1] * 40.0);
@@ -113,7 +138,7 @@ void ImplicitPlotBuilder::draw(QPainter& painter, const QString& expression, int
     {
         thread.get()->wait();
     }
-    Plot2D plot2D(expression, edgeList);
+    Plot2DImplicit plot2D(expression, edgeList, width, height);
     table.insertOrUpdate(plot2D);
 }
 

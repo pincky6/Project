@@ -44,25 +44,11 @@ QByteArray Plot3D::serializeIndices() const
 void Plot3D::deserializeVertices(QByteArray serializedVertices)
 {
     deserializeContainer((*vertices), serializedVertices);
-//    QDataStream streamVert(&serializedVertices, QDataStream::ReadOnly);
-//    while(!streamVert.atEnd())
-//    {
-//        Vertex element;
-//        streamVert >> element;
-//        vertices->push_back(element);
-//    }
 }
 
 void Plot3D::deserializeIndices(QByteArray serializedIndices)
 {
     deserializeContainer((*indices), serializedIndices);
-//    QDataStream streamVert(&serializedIndices, QDataStream::ReadOnly);
-//    while(!streamVert.atEnd())
-//    {
-//        unsigned int element;
-//        streamVert >> element;
-//        indices->push_back(element);
-//    }
 }
 
 Plot3D::~Plot3D()

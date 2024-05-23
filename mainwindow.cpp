@@ -306,6 +306,7 @@ void MainWindow::on_backPlotButtonClicked()
         ui->graphicArea3D->destroyPlotBuffers();
         ui->graphicArea3D->freeSchedulers();
     }
+    ui->historyWidget->deleteAllItems();
     uploadToHistoryLabel();
 }
 
@@ -355,6 +356,7 @@ void MainWindow::on_generateSTLButton_clicked()
 
 void MainWindow::on_historyButton_clicked()
 {
+    ui->historyWidget->deleteAllItems();
     ui->historyWidget->update();
     ui->stackedWidget_3->setCurrentIndex((int)CalculatorArea::HISTORY_AREA);
 }
