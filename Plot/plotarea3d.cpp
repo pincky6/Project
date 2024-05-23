@@ -18,8 +18,6 @@ PlotArea3D::PlotArea3D(QWidget *parent)
                        QOpenGLBuffer(QOpenGLBuffer::IndexBuffer)},
     defaultLength_(20.0f), scaleFactor_(1.0f), maxScaleFactor_(1.0f), mZ_(-5.0f), isAxesVisible(true)
 {
-    connect(&scheduler_, &PlotScheduler::updatePlot, this, &PlotArea3D::receiveData);
-    scheduler_.start();
     modelScheduler_.start();
 }
 
@@ -34,20 +32,21 @@ void PlotArea3D::setExpressions(const std::vector<QString>& newExpressionsVector
         if(expression.isEmpty()) continue;
         if(!table.existExpression(expression))
         {
-            initPlotBuilder(defaultLength_ * scaleFactor_);
+            initPlotBuilder(defaultLength_ * scaleFactor_, expression);
         }
         else
         {
             Plot3D plot3D = table.selectByExpression(expression);
             maxScaleFactor_ = plot3D.maxScaleFactor;
             scaleFactor_ = plot3D.maxScaleFactor;
-            resetPlot(plot3D.vertices, plot3D.indices);
+            resetPlot(plot3D.vertices, plot3D.indices, expression);
         }
     }
 }
 
 void PlotArea3D::resetPlot(std::shared_ptr<std::vector<Vertex>> plotVertices,
-                           std::shared_ptr<std::vector<unsigned int>> plotIndices)
+                           std::shared_ptr<std::vector<unsigned int>> plotIndices,
+                           const QString& expression)
 {
     if(plotVertices.get() == nullptr ||
         plotIndices.get() == nullptr)
@@ -58,7 +57,7 @@ void PlotArea3D::resetPlot(std::shared_ptr<std::vector<Vertex>> plotVertices,
         plotIndices->size() == 0) return;
     qDebug() << "dasd";
     destroyPlotBuffer();
-    Plot3D plot3D(expressionsVector_[0], plotVertices,
+    Plot3D plot3D(expression, plotVertices,
                   plotIndices, maxScaleFactor_);
     PlotTable3D table;
     table.insertOrUpdate(plot3D);
@@ -213,7 +212,10 @@ void PlotArea3D::destroyPlotBuffer()
 
 void PlotArea3D::freeSchedulers()
 {
-    scheduler_.freeQueue();
+    for(auto&& scheduler: schedulers_)
+    {
+        scheduler->freeQueue();
+    }
     modelScheduler_.freeQueue();
 }
 
@@ -281,7 +283,10 @@ void PlotArea3D::wheelEvent(QWheelEvent *event)
         if(scaleFactor_ > maxScaleFactor_)
         {
             maxScaleFactor_ = scaleFactor_;
-            initPlotBuilder(defaultLength_ * scaleFactor_);
+            for(const QString& expression: expressionsVector_)
+            {
+                initPlotBuilder(defaultLength_ * scaleFactor_, expression);
+            }
         }
     }
     else if(event->angleDelta().y() > 0)
@@ -301,7 +306,7 @@ void PlotArea3D::receiveData(std::shared_ptr<std::vector<Vertex>> plotVertices,
 {
     qDebug() << "receive plot";
 
-    resetPlot(plotVertices, plotIndices);
+    resetPlot(plotVertices, plotIndices, "");
 }
 
 
@@ -322,7 +327,7 @@ void PlotArea3D::initShaders()
     }
 }
 
-void PlotArea3D::initPlotBuilder(float length)
+void PlotArea3D::initPlotBuilder(float length, const QString& expression)
 {
     qDebug() << "init plot";
 
@@ -336,7 +341,13 @@ void PlotArea3D::initPlotBuilder(float length)
         builder->setThreadsNum(std::thread::hardware_concurrency() - 1);
         builder->setResolution({length * 2, length * 2, length * 2});
         builder->setExpression(expressionsVector_);
-        scheduler_.addTask(std::move(builder));
+        if(schedulers_.find(expression) == schedulers_.end())
+        {
+            schedulers_[expression].reset(new PlotScheduler);
+            connect(schedulers_[expression].get(), &PlotScheduler::updatePlot, this, &PlotArea3D::receiveData);
+            schedulers_[expression]->start();
+        }
+        schedulers_[expression]->addTask(std::move(builder));
     }
 }
 

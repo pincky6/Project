@@ -14,6 +14,8 @@
 
 #include "abstractplotarea.h"
 
+#include <QSharedPointer>
+#include <QMap>
 #include <QMatrix4x4>
 
 class PlotArea3D final: public QOpenGLWidget, public QOpenGLFunctions, public AbstractPlotArea
@@ -24,7 +26,8 @@ public:
     PlotArea3D(QWidget *parent = 0);
     void setExpressions(const std::vector<QString>&) override;
     void resetPlot(std::shared_ptr<std::vector<Vertex>>,
-                   std::shared_ptr<std::vector<unsigned int>>);
+                   std::shared_ptr<std::vector<unsigned int>>,
+                   const QString&);
     void destroyPlotBuffer();
     void freeSchedulers();
 
@@ -52,7 +55,7 @@ signals:
     void stopThread();
 private:
     void initShaders();
-    void initPlotBuilder(float length);
+    void initPlotBuilder(float length, const QString&);
     void initAxes(float length);
 private:
     QMatrix4x4 projectionMatrix_;
@@ -65,7 +68,7 @@ private:
     QVector2D mousePosition_;
     QQuaternion rotation_;
 
-    plot_builder::PlotScheduler scheduler_;
+    QMap<QString, QSharedPointer<plot_builder::PlotScheduler>> schedulers_;
     plot_builder::STLModelScheduler modelScheduler_;
 
     float defaultLength_;
